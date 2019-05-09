@@ -1,0 +1,54 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject",
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(js)$": "<rootDir>/node_modules/babel-jest",
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testPathIgnorePatterns": [
+      "\\.snap$",
+      "<rootDir>/node_modules/"
+    ],
+    "cacheDirectory": ".jest/cache"
+  },
+  "dependencies": {
+    "@expo/samples": "2.1.1",
+    "expo": "^32.0.0",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-navigation": "^3.0.9",
+    "@minesweeper/core": "file:../minesweeper-lib"
+  },
+  "devDependencies": {
+    "@types/expo": "^32.0.13",
+    "@types/jest": "^24.0.12",
+    "@types/react": "^16.8.16",
+    "@types/react-native": "^0.57.51",
+    "@types/react-navigation": "^3.0.6",
+    "@types/react-test-renderer": "^16.8.1",
+    "babel-preset-expo": "^5.0.0",
+    "eslint": "^5.16.0",
+    "expo-task-manager-interface": "^3.0.0",
+    "jest-expo": "^32.0.0",
+    "prop-types": "^15.7.2",
+    "react-addons-test-utils": "^15.6.2",
+    "react-native-typescript-transformer": "^1.2.12",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.5"
+  },
+  "private": true
+}

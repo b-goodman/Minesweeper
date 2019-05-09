@@ -1,0 +1,35 @@
+{
+  "name": "@minesweeper/core",
+  "version": "0.2.0",
+  "description": "Library for popular game 'Minesweeper'",
+  "main": "./lib/index.js",
+  "repository": "https://github.com/b-goodman/minesweeper",
+  "license": "MIT",
+  "keywords": [],
+  "scripts": {
+    "build:docs": "npx typedoc ./src",
+    "build:lib": "tsc && yarn build_docs"
+  },
+  "files": [
+    "lib"
+  ],
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/src/.*\\.spec\\.ts$"
+  },
+  "devDependencies": {
+    "@types/jest": "^21.1.5",
+    "jest": "^21.2.1",
+    "ts-jest": "^21.1.4",
+    "tslint": "^5.16.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^2.6.1"
+  },
+  "dependencies": {}
+}

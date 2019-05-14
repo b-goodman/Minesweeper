@@ -2,7 +2,9 @@ import { DeepPartial } from "redux";
 import { configureStore, getDefaultMiddleware } from "redux-starter-kit";
 import rootReducer from "../reducers";
 
-import {Cell, Game} from "@minesweeper/core"
+import {Cell} from "@minesweeper/core"
+
+const minesweeper = require("@minesweeper/core");
 
 export interface DefaultState {
 
@@ -12,10 +14,10 @@ export interface DefaultState {
 
 export default (rows: number) => {
 
-    const Grid = new Game(rows);
+    const grid = minesweeper(rows);
 
     const defaultState: DeepPartial<DefaultState> = {
-        Cells: Grid.Cells
+        Cells: grid.Cells
     };
 
     const store = configureStore({
@@ -25,9 +27,9 @@ export default (rows: number) => {
     });
 
 // tslint:disable-next-line: no-if-statement
-    // if (process.env.NODE_ENV !== 'production' && module.hot) {
-    //     module.hot.accept("../reducers/index", () => store.replaceReducer(rootReducer))
-    // };
+    if (process.env.NODE_ENV !== 'production' && (module as any).hot) {
+        (module as any).hot.accept("../reducers/index", () => store.replaceReducer(rootReducer))
+    };
 
     return store;
 }

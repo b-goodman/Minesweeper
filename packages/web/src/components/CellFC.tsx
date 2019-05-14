@@ -5,6 +5,8 @@ import * as Redux from "redux";
 import { Coord } from "@minesweeper/core/src/interfaces";
 import { DefaultState } from '../store';
 
+import "./Cell.css";
+
 interface DispatchProps {
     readonly event: () => void;
 }
@@ -18,20 +20,25 @@ export type CellFCProps = DispatchProps & OwnProps & DefaultState
 
 const  mapDispatchToProps = (dispatch: Redux.Dispatch<any> ) => {
     return {
-
+        // uncover
+        // (un)flag
+        // highlight neighbours
     }
 }
 
 const mapStateToProps = (state: DefaultState, ownState: OwnProps) => {
+    const cellState = state.Cells[ownState.coordinate[0]][ownState.coordinate[1]];
     return {
-        coordinate: ownState.coordinate,
-        key: ownState.key,
+        isCovered: cellState.covered,
+        flagged: cellState.flagged,
     }
 }
 
 
-const ConnectedCell = ({}) => (
-    <div>
+const ConnectedCell = ({ isCovered, flagged }) => (
+    <div
+        className={`cell ${isCovered ? "covered" : ""} ${flagged ? "flagged" : ""}`}
+    >
 
     </div>
 )

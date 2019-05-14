@@ -1,4 +1,4 @@
-import { Coord, CellUncoverData, CellConstructor } from './interfaces';
+import { Coord, CellConstructor } from './interfaces';
 export default class Cell {
     private readonly mined;
     readonly coordinate: Coord;
@@ -12,10 +12,8 @@ export default class Cell {
     readonly isMined: boolean;
     readonly adjacentMines: number;
     isEmpty(): boolean;
-    getAdjacentUncoveredCoords(): readonly Coord[];
     getAdjacentCells(): readonly Cell[];
-    private shouldChainUncover;
-    private chainUncover;
-    cellUncover(): CellUncoverData;
+    getAdjacentUncoveredCells(): readonly Cell[];
+    uncover(): void;
 }
 //# sourceMappingURL=Cell.d.ts.map

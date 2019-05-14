@@ -5,6 +5,7 @@ import { DefaultState } from '../store';
 
 import Cell from "@minesweeper/core"
 import CellFC from "./CellFC";
+import "./Grid.css";
 
 
 
@@ -24,7 +25,7 @@ const renderCellFCRow = (rowCells: readonly Cell[]) => {
     const row = rowCells.map( (cell) => {
         return <CellFC coordinate={cell.coordinate} key={cell.coordinate.join()} />
     });
-    return <div>{row}</div>;
+    return <div className="row">{row}</div>;
 }
 
 const getChildren = (cells: ReadonlyArray<readonly Cell[]> ) => {
@@ -35,7 +36,7 @@ const getChildren = (cells: ReadonlyArray<readonly Cell[]> ) => {
 
 const ConnectedGrid: React.FunctionComponent< DefaultState > = ({ Cells, }) => (
 
-        <div>
+        <div className="grid">
             {getChildren(Cells)}
         </div>
 )

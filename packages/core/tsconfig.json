@@ -9,5 +9,14 @@
     "declarationMap": true,
     "allowSyntheticDefaultImports": true  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
   },
-  "include": [ "./src/**/*.ts" ]
+  "include": [ "./src/**/*.ts" ],
+  "typedocOptions": {
+    "mode": "modules",
+    "out": "docs",
+    "name": "@minesweeper/core",
+    "exclude": "node_modules",
+    "includeDeclarations": true,
+    "excludeExternals": true,
+    "ignoreCompilerErrors": true
+  }
 }

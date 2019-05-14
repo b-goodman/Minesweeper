@@ -11,3 +11,4 @@ build/docs
 **/*.spec.*
 coverage
 *.log
+docs

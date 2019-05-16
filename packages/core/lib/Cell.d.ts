@@ -3,11 +3,14 @@ export default class Cell {
     private readonly mined;
     readonly coordinate: Coord;
     private readonly neighbouringMines;
-    private covered;
-    private flagged;
+    covered: boolean;
+    flagged: boolean;
+    highlight: boolean;
     constructor(args: CellConstructor);
     readonly isFlagged: boolean;
     toggleFlag(): Cell;
+    toggleHighlight(): boolean;
+    isHighlighted(): boolean;
     readonly isCovered: boolean;
     readonly isMined: boolean;
     readonly adjacentMines: number;

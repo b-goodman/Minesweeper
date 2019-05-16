@@ -5,8 +5,9 @@ export default class Cell {
   private readonly mined: boolean;
   public readonly coordinate: Coord;
   private readonly neighbouringMines: number;
-  private covered: boolean;
-  private flagged: boolean;
+  public covered: boolean;
+  public flagged: boolean;
+  public highlight: boolean;
 
   constructor( args: CellConstructor ) {
     this.coordinate = args.coordinate;
@@ -14,6 +15,7 @@ export default class Cell {
     this.neighbouringMines = args.neighbouringMines;
     this.flagged = false;
     this.covered = true;
+    this.highlight = false;
   };
 
   get isFlagged(): boolean {
@@ -24,6 +26,15 @@ export default class Cell {
     this.flagged = !this.flagged;
     return this;
   };
+
+  public toggleHighlight(): boolean {
+    this.highlight = !this.highlight;
+    return this.highlight;
+  }
+
+  public isHighlighted(): boolean {
+    return this.highlight;
+  }
 
   get isCovered(): boolean {
     return this.covered;
@@ -53,6 +64,7 @@ export default class Cell {
     });
   };
 
+  // TODO add callback for after cell uncovered
   public uncover(): void {
     if (this.isFlagged) {
       // when uncovering a flagged cell, the first uncover action merely removes the flag.

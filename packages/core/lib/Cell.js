@@ -11,6 +11,7 @@ class Cell {
         this.neighbouringMines = args.neighbouringMines;
         this.flagged = false;
         this.covered = true;
+        this.highlight = false;
     }
     ;
     get isFlagged() {
@@ -22,6 +23,13 @@ class Cell {
         return this;
     }
     ;
+    toggleHighlight() {
+        this.highlight = !this.highlight;
+        return this.highlight;
+    }
+    isHighlighted() {
+        return this.highlight;
+    }
     get isCovered() {
         return this.covered;
     }

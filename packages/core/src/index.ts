@@ -9,3 +9,4 @@ const Game = ( rows:number, options:{mines?:number}={} ):Grid => {
 export default Game;
 export {Grid};
 export {Cell};
+

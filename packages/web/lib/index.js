@@ -14,7 +14,7 @@ const Phaser = __importStar(require("phaser"));
 const GridScene_1 = __importDefault(require("./GridScene"));
 const config = {
     type: Phaser.WEBGL,
-    width: 800,
+    width: 600,
     height: 600,
     parent: "main",
     scene: [GridScene_1.default],
@@ -27,5 +27,5 @@ class MinesweeperGame extends Phaser.Game {
 exports.MinesweeperGame = MinesweeperGame;
 window.onload = () => {
     const msGame = new MinesweeperGame(config);
-    msGame.scene.start("GridScene", { rows: 10 });
+    msGame.scene.start("GridScene");
 };

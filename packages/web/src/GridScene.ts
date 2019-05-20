@@ -2,17 +2,49 @@ import Phaser from "phaser";
 import {Grid} from "@minesweeper/core/lib";
 
 const config = {
-    key: "GridScene"
+    key: "GridScene",
 }
 
 interface initParams {
-    rows: number
+    rows: number,
+    cellWidth: number,
 }
+
+const defaultParams: initParams = {
+    rows:10,
+    cellWidth: 60,
+}
+
+const createCellGeom = (params:initParams): Array< Phaser.Geom.Rectangle[] > => {
+    let geomArray = [];
+    for (let x = 0; x < params.rows; x++) {
+        geomArray[x] = [];
+        for (let y = 0; y < params.rows; y++) {
+            geomArray[x][y] = new Phaser.Geom.Rectangle(x * params.cellWidth, y * params.cellWidth, params.cellWidth, params.cellWidth);
+        }
+    };
+    return geomArray;
+};
+
+
+const cellGraphicsStyle = () => {
+    return {
+        fillStyle: {
+            color: 0x0000ff
+        },
+        lineStyle: {
+            color: 0x0000aa
+        }
+    }
+}
+
+
 
 export default class GridScene extends Phaser.Scene {
     mines: number;
     flagsRemaining: number;
-    nRows: number;
+    cellGeom: Array< Phaser.Geom.Rectangle[] > = [[]];
+    params: initParams;
 
     constructor(){
         super(config);
@@ -22,11 +54,12 @@ export default class GridScene extends Phaser.Scene {
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
      * @param params
      */
-    init(params:initParams): void {
-        new Grid(10,{});
+    init(params:initParams = defaultParams): void {
+        new Grid( params.rows, {} );
         this.flagsRemaining = this.mines = Grid.nMines;
-        this.nRows = Grid.nRows;
-        console.log(`init params: ${params}`);
+        this.cellGeom = createCellGeom(params);
+        this.params = params;
+        console.log(`init params: ${JSON.stringify(params)}`);
     }
 
     /**
@@ -40,39 +73,30 @@ export default class GridScene extends Phaser.Scene {
      * Called when the assets are loaded and usually contains creation of the main game objects (background, player, obstacles, enemies, etc.).
      */
     create(): void {
-        // TODO
-        const graphics = this.add.graphics({ fillStyle: { color: 0x0000ff }, lineStyle: { color: 0x0000aa } });
+        //TODO set enum -> styles - def setGraphicsStyle = (STYLE:enum)
+        const graphics = this.add.graphics(cellGraphicsStyle());
 
+        console.log(this.cellGeom);
 
-        let rectangles = [];
+        this.input.on('pointerdown', (pointer) => {
+            var x = Math.floor(pointer.x / this.params.cellWidth);
+            var y = Math.floor(pointer.y / this.params.cellWidth);
 
-        for (let x = 0; x < this.nRows; x++) {
-            rectangles[x] = [];
-            for (let y = 0; y < this.nRows; y++) {
-                rectangles[x][y] = new Phaser.Geom.Rectangle(x * 80, y * 60, 80, 60);
-            }
-        };
+            graphics.fillStyle(0xaa0000);
+            graphics.fillRectShape(this.cellGeom[x][y]);
 
-        console.log(rectangles);
-
-        this.input.on('pointerdown', function (pointer) {
-            var x = Math.floor(pointer.x / 80);
-            var y = Math.floor(pointer.y / 60);
-
-            rectangles[x][y].setEmpty();
-
-            redraw();
+            // redraw();
         });
 
         const redraw = () => {
             graphics.clear();
 
-            for(var x = 0; x < 10; x++)
+            for(var x = 0; x < this.params.rows; x++)
             {
-                for(var y = 0; y < 10; y++)
+                for(var y = 0; y < this.params.rows; y++)
                 {
-                    graphics.fillRectShape(rectangles[x][y]);
-                    graphics.strokeRectShape(rectangles[x][y]);
+                    graphics.fillRectShape(this.cellGeom[x][y]);
+                    graphics.strokeRectShape(this.cellGeom[x][y]);
                 }
             }
         }

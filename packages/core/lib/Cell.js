@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Grid_1 = __importDefault(require("./Grid"));
+;
 class Cell {
     constructor(args) {
         this.coordinate = args.coordinate;
@@ -12,6 +13,7 @@ class Cell {
         this.flagged = false;
         this.covered = true;
         this.highlight = false;
+        this.state = 0 /* covered */;
     }
     ;
     get isFlagged() {
@@ -20,6 +22,7 @@ class Cell {
     ;
     toggleFlag() {
         this.flagged = !this.flagged;
+        this.state = this.flagged ? 0 /* covered */ : 1 /* uncovered */;
         return this;
     }
     ;
@@ -58,6 +61,7 @@ class Cell {
         });
     }
     ;
+    // TODO add callback for after cell uncovered
     uncover() {
         if (this.isFlagged) {
             // when uncovering a flagged cell, the first uncover action merely removes the flag.
@@ -65,6 +69,7 @@ class Cell {
         }
         else if (this.isEmpty() && this.isCovered) {
             this.covered = false;
+            this.state = 1 /* uncovered */;
             const adjacentUncoveredCells = this.getAdjacentUncoveredCells();
             adjacentUncoveredCells.forEach((cellObj) => {
                 cellObj.uncover();
@@ -72,6 +77,7 @@ class Cell {
         }
         else {
             this.covered = false;
+            this.state = 1 /* uncovered */;
         }
     }
     ;

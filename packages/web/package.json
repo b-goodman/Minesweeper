@@ -9,7 +9,8 @@
   "scripts": {
     "tsc": "tsc && yarn build:docs && ./node_modules/.bin/webpack ",
     "build:docs": "npx typedoc ./src",
-    "build:lib": "tsc && ./node_modules/.bin/webpack"
+    "build:lib": "tsc && ./node_modules/.bin/webpack",
+    "start": "./node_modules/.bin/webpack-dev-server "
   },
   "files": [
     "lib"

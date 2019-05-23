@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import {Grid} from "@minesweeper/core/lib";
+import {Grid, CellStates} from "@minesweeper/core/lib"
 
 const config = {
     key: "GridScene",
@@ -27,16 +27,50 @@ const createCellGeom = (params:initParams): Array< Phaser.Geom.Rectangle[] > => 
 };
 
 
-const cellGraphicsStyle = () => {
-    return {
+const cellGraphicsStyle = (cellState:CellStates = CellStates.covered) => {
+
+    const defaultCovered = {
         fillStyle: {
-            color: 0x0000ff
+            color: 0xC0C0C0
         },
         lineStyle: {
             color: 0x0000aa
         }
+    };
+
+    switch (cellState) {
+        case CellStates.covered:
+            return defaultCovered;
+            break;
+
+        case CellStates.uncovered:
+            return {
+                fillStyle: {
+                    color: 0x0000ff
+                },
+                lineStyle: {
+                    color: 0x0000aa
+                }
+            }
+            break;
+
+        case CellStates.flagged:
+            return {
+                fillStyle: {
+                    color: 0x008000,
+                },
+                lineStyle: {
+                    color: 0x0000aa
+                }
+            }
+            break;
+
+        default:
+            return defaultCovered;
+            break;
     }
-}
+
+};
 
 
 
@@ -73,33 +107,39 @@ export default class GridScene extends Phaser.Scene {
      * Called when the assets are loaded and usually contains creation of the main game objects (background, player, obstacles, enemies, etc.).
      */
     create(): void {
-        //TODO set enum -> styles - def setGraphicsStyle = (STYLE:enum)
         const graphics = this.add.graphics(cellGraphicsStyle());
 
-        console.log(this.cellGeom);
+        this.input.mouse.disableContextMenu();
 
         this.input.on('pointerdown', (pointer) => {
-            var x = Math.floor(pointer.x / this.params.cellWidth);
-            var y = Math.floor(pointer.y / this.params.cellWidth);
-
-            graphics.fillStyle(0xaa0000);
-            graphics.fillRectShape(this.cellGeom[x][y]);
-
-            // redraw();
+            const x = Math.floor(pointer.x / this.params.cellWidth);
+            const y = Math.floor(pointer.y / this.params.cellWidth);
+            if ( pointer.rightButtonDown() ){
+                //toggle flag on clicked cell
+                Grid.Cells[x][y].toggleFlag();
+            } else {
+                //uncover cell
+                Grid.Cells[x][y].uncover();
+            };
+            const cellState:CellStates = Grid.getCell([x,y]).state;
+            console.log(cellState);
+            redraw();
         });
 
         const redraw = () => {
             graphics.clear();
 
-            for(var x = 0; x < this.params.rows; x++)
+            for(let x = 0; x < this.params.rows; x++)
             {
-                for(var y = 0; y < this.params.rows; y++)
+                for(let y = 0; y < this.params.rows; y++)
                 {
+                    const cellState:CellStates = Grid.getCell([x,y]).state;
+                    graphics.fillStyle(cellGraphicsStyle(cellState).fillStyle.color)
                     graphics.fillRectShape(this.cellGeom[x][y]);
                     graphics.strokeRectShape(this.cellGeom[x][y]);
                 }
             }
-        }
+        };
 
         redraw();
 

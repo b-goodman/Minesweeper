@@ -1,4 +1,9 @@
 import { Coord, CellConstructor } from './interfaces';
+export declare const enum CellStates {
+    covered = 0,
+    uncovered = 1,
+    flagged = 2
+}
 export default class Cell {
     private readonly mined;
     readonly coordinate: Coord;
@@ -6,6 +11,7 @@ export default class Cell {
     covered: boolean;
     flagged: boolean;
     highlight: boolean;
+    state: CellStates;
     constructor(args: CellConstructor);
     readonly isFlagged: boolean;
     toggleFlag(): Cell;

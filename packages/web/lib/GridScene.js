@@ -23,15 +23,43 @@ const createCellGeom = (params) => {
     ;
     return geomArray;
 };
-const cellGraphicsStyle = () => {
-    return {
+const cellGraphicsStyle = (cellState = 0 /* covered */) => {
+    const defaultCovered = {
         fillStyle: {
-            color: 0x0000ff
+            color: 0xC0C0C0
         },
         lineStyle: {
             color: 0x0000aa
         }
     };
+    switch (cellState) {
+        case 0 /* covered */:
+            return defaultCovered;
+            break;
+        case 1 /* uncovered */:
+            return {
+                fillStyle: {
+                    color: 0x0000ff
+                },
+                lineStyle: {
+                    color: 0x0000aa
+                }
+            };
+            break;
+        case 2 /* flagged */:
+            return {
+                fillStyle: {
+                    color: 0x008000,
+                },
+                lineStyle: {
+                    color: 0x0000aa
+                }
+            };
+            break;
+        default:
+            return defaultCovered;
+            break;
+    }
 };
 class GridScene extends phaser_1.default.Scene {
     constructor() {
@@ -60,24 +88,29 @@ class GridScene extends phaser_1.default.Scene {
      */
     create() {
         const graphics = this.add.graphics(cellGraphicsStyle());
-        // const cellGeometry = createCellGeom(this.params);
-        // cellGeometry.forEach( (rowArray:Phaser.Geom.Rectangle[]) => {
-        //     rowArray.forEach( (cellGeom) => {
-        //         this.add.graphics
-        //     })
-        // })
-        console.log(this.cellGeom);
+        this.input.mouse.disableContextMenu();
         this.input.on('pointerdown', (pointer) => {
-            var x = Math.floor(pointer.x / this.params.cellWidth);
-            var y = Math.floor(pointer.y / this.params.cellWidth);
-            graphics.fillStyle(0xaa0000);
-            graphics.fillRectShape(this.cellGeom[x][y]);
-            // redraw();
+            const x = Math.floor(pointer.x / this.params.cellWidth);
+            const y = Math.floor(pointer.y / this.params.cellWidth);
+            if (pointer.rightButtonDown()) {
+                //toggle flag on clicked cell
+                lib_1.Grid.Cells[x][y].toggleFlag();
+            }
+            else {
+                //uncover cell
+                lib_1.Grid.Cells[x][y].uncover();
+            }
+            ;
+            const cellState = lib_1.Grid.getCell([x, y]).state;
+            console.log(cellState);
+            redraw();
         });
         const redraw = () => {
             graphics.clear();
-            for (var x = 0; x < this.params.rows; x++) {
-                for (var y = 0; y < this.params.rows; y++) {
+            for (let x = 0; x < this.params.rows; x++) {
+                for (let y = 0; y < this.params.rows; y++) {
+                    const cellState = lib_1.Grid.getCell([x, y]).state;
+                    graphics.fillStyle(cellGraphicsStyle(cellState).fillStyle.color);
                     graphics.fillRectShape(this.cellGeom[x][y]);
                     graphics.strokeRectShape(this.cellGeom[x][y]);
                 }

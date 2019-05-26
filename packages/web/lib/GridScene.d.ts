@@ -1,19 +1,20 @@
-import Phaser from "phaser";
-interface initParams {
+import { Scene } from "phaser";
+import CellObj from "./CellObj";
+interface InitParams {
     rows: number;
     cellWidth: number;
 }
-export default class GridScene extends Phaser.Scene {
+export default class GridScene extends Scene {
     mines: number;
     flagsRemaining: number;
-    cellGeom: Array<Phaser.Geom.Rectangle[]>;
-    params: initParams;
+    params: InitParams;
+    cellObjs: CellObj[];
     constructor();
     /**
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
      * @param params
      */
-    init(params?: initParams): void;
+    init(params?: InitParams): void;
     /**
      * Called before the scene objects are created, and it contains loading assets; these assets are cached, so when the scene is restarted, they are not reloaded.
      */

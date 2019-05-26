@@ -1,8 +1,8 @@
 import { Coord, CellConstructor } from './interfaces';
 export declare const enum CellStates {
-    covered = 0,
-    uncovered = 1,
-    flagged = 2
+    COVERED = 0,
+    UNCOVERED = 1,
+    FLAGGED = 2
 }
 export default class Cell {
     private readonly mined;
@@ -22,7 +22,7 @@ export default class Cell {
     readonly adjacentMines: number;
     isEmpty(): boolean;
     getAdjacentCells(): readonly Cell[];
-    getAdjacentUncoveredCells(): readonly Cell[];
+    getAdjacentCoveredCells(): readonly Cell[];
     uncover(): void;
 }
 //# sourceMappingURL=Cell.d.ts.map

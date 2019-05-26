@@ -3,8 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const phaser_1 = __importDefault(require("phaser"));
+//Geom, Loader,
+const phaser_1 = require("phaser");
+const CellObj_1 = __importDefault(require("./CellObj"));
 const lib_1 = require("@minesweeper/core/lib");
+const enums_1 = require("./enums");
+//Color,
+const enums_2 = require("./enums");
+// import { Coord } from "@minesweeper/core/lib/interfaces"
 const config = {
     key: "GridScene",
 };
@@ -12,59 +18,10 @@ const defaultParams = {
     rows: 10,
     cellWidth: 60,
 };
-const createCellGeom = (params) => {
-    let geomArray = [];
-    for (let x = 0; x < params.rows; x++) {
-        geomArray[x] = [];
-        for (let y = 0; y < params.rows; y++) {
-            geomArray[x][y] = new phaser_1.default.Geom.Rectangle(x * params.cellWidth, y * params.cellWidth, params.cellWidth, params.cellWidth);
-        }
-    }
-    ;
-    return geomArray;
-};
-const cellGraphicsStyle = (cellState = 0 /* covered */) => {
-    const defaultCovered = {
-        fillStyle: {
-            color: 0xC0C0C0
-        },
-        lineStyle: {
-            color: 0x0000aa
-        }
-    };
-    switch (cellState) {
-        case 0 /* covered */:
-            return defaultCovered;
-            break;
-        case 1 /* uncovered */:
-            return {
-                fillStyle: {
-                    color: 0x0000ff
-                },
-                lineStyle: {
-                    color: 0x0000aa
-                }
-            };
-            break;
-        case 2 /* flagged */:
-            return {
-                fillStyle: {
-                    color: 0x008000,
-                },
-                lineStyle: {
-                    color: 0x0000aa
-                }
-            };
-            break;
-        default:
-            return defaultCovered;
-            break;
-    }
-};
-class GridScene extends phaser_1.default.Scene {
+class GridScene extends phaser_1.Scene {
     constructor() {
         super(config);
-        this.cellGeom = [[]];
+        this.cellObjs = [];
     }
     /**
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
@@ -73,7 +30,6 @@ class GridScene extends phaser_1.default.Scene {
     init(params = defaultParams) {
         new lib_1.Grid(params.rows, {});
         this.flagsRemaining = this.mines = lib_1.Grid.nMines;
-        this.cellGeom = createCellGeom(params);
         this.params = params;
         console.log(`init params: ${JSON.stringify(params)}`);
     }
@@ -81,42 +37,35 @@ class GridScene extends phaser_1.default.Scene {
      * Called before the scene objects are created, and it contains loading assets; these assets are cached, so when the scene is restarted, they are not reloaded.
      */
     preload() {
-        // TODO
+        // this.load.atlas("tiles","assets/tileset.png","assets/minesweeper_tileset.json");
+        this.load.image(enums_1.Textures.COVERED, "/assets/09.png");
+        this.load.image(enums_1.Textures.EMPTY, "/assets/10.png");
+        this.load.image(enums_1.Textures.FLAGGED, "/assets/11.png");
+        this.load.image(enums_1.Textures.HOVER, "/assets/12.png");
+        this.load.image(enums_1.Textures.ADJACENT, "/assets/13.png");
+        this.load.image(enums_1.Textures.MINED, "/assets/14.png");
     }
     /**
      * Called when the assets are loaded and usually contains creation of the main game objects (background, player, obstacles, enemies, etc.).
      */
     create() {
-        const graphics = this.add.graphics(cellGraphicsStyle());
+        this.cellObjs = new Array(lib_1.Grid.nRows).fill(undefined).map((_elem, index_i) => {
+            return new Array(lib_1.Grid.nRows).fill(undefined).map((_elem, index_j) => {
+                const p0 = { x: (index_j * this.params.cellWidth) + this.params.cellWidth / 2, y: (index_i * this.params.cellWidth) + this.params.cellWidth / 2 };
+                return this.add.existing(new CellObj_1.default(this, p0, { index: [index_i, index_j] }));
+            });
+        }).flat();
+        // initialize event emitters.
         this.input.mouse.disableContextMenu();
-        this.input.on('pointerdown', (pointer) => {
-            const x = Math.floor(pointer.x / this.params.cellWidth);
-            const y = Math.floor(pointer.y / this.params.cellWidth);
-            if (pointer.rightButtonDown()) {
-                //toggle flag on clicked cell
-                lib_1.Grid.Cells[x][y].toggleFlag();
-            }
-            else {
-                //uncover cell
-                lib_1.Grid.Cells[x][y].uncover();
-            }
-            ;
-            const cellState = lib_1.Grid.getCell([x, y]).state;
-            console.log(cellState);
-            redraw();
+        this.input.on(enums_2.InputEventType.GAMEOBJECT_DOWN, (_pointer, gameObject) => {
+            gameObject.emit(enums_2.EmitterEvents.CLICKED, _pointer);
         });
-        const redraw = () => {
-            graphics.clear();
-            for (let x = 0; x < this.params.rows; x++) {
-                for (let y = 0; y < this.params.rows; y++) {
-                    const cellState = lib_1.Grid.getCell([x, y]).state;
-                    graphics.fillStyle(cellGraphicsStyle(cellState).fillStyle.color);
-                    graphics.fillRectShape(this.cellGeom[x][y]);
-                    graphics.strokeRectShape(this.cellGeom[x][y]);
-                }
-            }
-        };
-        redraw();
+        this.input.on(enums_2.InputEventType.GAMEOBJECT_OVER, (_pointer, gameObject) => {
+            gameObject.emit(enums_2.EmitterEvents.HOVER_IN, _pointer);
+        });
+        this.input.on(enums_2.InputEventType.GAMEOBJECT_OUT, (_pointer, gameObject) => {
+            gameObject.emit(enums_2.EmitterEvents.HOVER_OUT, _pointer);
+        });
     }
     /**
      * Called every tick and contains the dynamic part of the scene — everything that moves, flashes, etc.
@@ -124,6 +73,7 @@ class GridScene extends phaser_1.default.Scene {
      */
     update() {
         // TODO
+        this.cellObjs.forEach(obj => obj.refreshState());
     }
 }
 exports.default = GridScene;

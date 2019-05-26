@@ -2,9 +2,9 @@ import Grid from './Grid';
 import { Coord, CellConstructor } from './interfaces';
 
 export const enum CellStates {
-  covered,
-  uncovered,
-  flagged
+  COVERED,
+  UNCOVERED,
+  FLAGGED
 };
 
 export default class Cell {
@@ -23,7 +23,7 @@ export default class Cell {
     this.flagged = false;
     this.covered = true;
     this.highlight = false;
-    this.state = CellStates.covered;
+    this.state = CellStates.COVERED;
   };
 
   get isFlagged(): boolean {
@@ -32,7 +32,7 @@ export default class Cell {
 
   public toggleFlag(): Cell {
     this.flagged = !this.flagged;
-    this.state = this.flagged ? CellStates.covered : CellStates.uncovered;
+    this.state = this.flagged ? CellStates.COVERED : CellStates.UNCOVERED;
     return this;
   };
 
@@ -65,7 +65,7 @@ export default class Cell {
     return Grid.getAdjacentCoords(this.coordinate).map(pos => Grid.getCell(pos));
   };
 
-  public getAdjacentUncoveredCells(): readonly Cell[] {
+  public getAdjacentCoveredCells(): readonly Cell[] {
     const allAdjCells: readonly Cell[] = this.getAdjacentCells();
     // filter out coords for uncovered and flagged cells
     return allAdjCells.filter( (cellObj) => {
@@ -80,14 +80,14 @@ export default class Cell {
       this.toggleFlag();
     } else if ( this.isEmpty() && this.isCovered ) {
       this.covered = false;
-      this.state = CellStates.uncovered;
-      const adjacentUncoveredCells: readonly Cell[] = this.getAdjacentUncoveredCells();
+      this.state = CellStates.UNCOVERED;
+      const adjacentUncoveredCells: readonly Cell[] = this.getAdjacentCoveredCells();
       adjacentUncoveredCells.forEach( (cellObj) => {
         cellObj.uncover()
       });
     } else {
       this.covered = false;
-      this.state = CellStates.uncovered;
+      this.state = CellStates.UNCOVERED;
     }
   };
 

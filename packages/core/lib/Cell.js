@@ -13,7 +13,7 @@ class Cell {
         this.flagged = false;
         this.covered = true;
         this.highlight = false;
-        this.state = 0 /* covered */;
+        this.state = 0 /* COVERED */;
     }
     ;
     get isFlagged() {
@@ -22,7 +22,7 @@ class Cell {
     ;
     toggleFlag() {
         this.flagged = !this.flagged;
-        this.state = this.flagged ? 0 /* covered */ : 1 /* uncovered */;
+        this.state = this.flagged ? 0 /* COVERED */ : 1 /* UNCOVERED */;
         return this;
     }
     ;
@@ -53,7 +53,7 @@ class Cell {
         return Grid_1.default.getAdjacentCoords(this.coordinate).map(pos => Grid_1.default.getCell(pos));
     }
     ;
-    getAdjacentUncoveredCells() {
+    getAdjacentCoveredCells() {
         const allAdjCells = this.getAdjacentCells();
         // filter out coords for uncovered and flagged cells
         return allAdjCells.filter((cellObj) => {
@@ -69,15 +69,15 @@ class Cell {
         }
         else if (this.isEmpty() && this.isCovered) {
             this.covered = false;
-            this.state = 1 /* uncovered */;
-            const adjacentUncoveredCells = this.getAdjacentUncoveredCells();
+            this.state = 1 /* UNCOVERED */;
+            const adjacentUncoveredCells = this.getAdjacentCoveredCells();
             adjacentUncoveredCells.forEach((cellObj) => {
                 cellObj.uncover();
             });
         }
         else {
             this.covered = false;
-            this.state = 1 /* uncovered */;
+            this.state = 1 /* UNCOVERED */;
         }
     }
     ;

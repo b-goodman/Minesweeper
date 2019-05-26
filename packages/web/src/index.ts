@@ -1,15 +1,15 @@
-import * as Phaser from "phaser";
+import {Game} from "phaser";
 import GridScene from "./GridScene";
 
 const config = {
-    type: Phaser.WEBGL,
+    type: Phaser.AUTO,
     width: 600,
     height: 600,
     parent: "main",
     scene: [GridScene],
 };
 
-export class MinesweeperGame extends Phaser.Game {
+export class MinesweeperGame extends Game {
     constructor(config){
         super(config)
     }

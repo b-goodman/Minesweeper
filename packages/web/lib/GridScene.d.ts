@@ -9,6 +9,7 @@ export default class GridScene extends Scene {
     flagsRemaining: number;
     params: InitParams;
     cellObjs: CellObj[];
+    lClicks: number;
     constructor();
     /**
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).

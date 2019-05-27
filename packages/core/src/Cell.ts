@@ -1,6 +1,7 @@
 import Grid from './Grid';
 import { Coord, CellConstructor } from './interfaces';
 
+// TODO - remove
 export const enum CellStates {
   COVERED,
   UNCOVERED,

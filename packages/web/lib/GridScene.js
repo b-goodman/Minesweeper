@@ -22,6 +22,7 @@ class GridScene extends phaser_1.Scene {
     constructor() {
         super(config);
         this.cellObjs = [];
+        this.lClicks = 0;
     }
     /**
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
@@ -39,11 +40,19 @@ class GridScene extends phaser_1.Scene {
     preload() {
         // this.load.atlas("tiles","assets/tileset.png","assets/minesweeper_tileset.json");
         this.load.image(enums_1.Textures.COVERED, "/assets/09.png");
-        this.load.image(enums_1.Textures.EMPTY, "/assets/10.png");
+        this.load.image(enums_1.UncoveredTextures.EMPTY, "/assets/10.png");
         this.load.image(enums_1.Textures.FLAGGED, "/assets/11.png");
         this.load.image(enums_1.Textures.HOVER, "/assets/12.png");
         this.load.image(enums_1.Textures.ADJACENT, "/assets/13.png");
         this.load.image(enums_1.Textures.MINED, "/assets/14.png");
+        this.load.image(enums_1.UncoveredTextures.N01, "/assets/01.png");
+        this.load.image(enums_1.UncoveredTextures.N02, "/assets/02.png");
+        this.load.image(enums_1.UncoveredTextures.N03, "/assets/03.png");
+        this.load.image(enums_1.UncoveredTextures.N04, "/assets/04.png");
+        this.load.image(enums_1.UncoveredTextures.N05, "/assets/05.png");
+        this.load.image(enums_1.UncoveredTextures.N06, "/assets/06.png");
+        this.load.image(enums_1.UncoveredTextures.N07, "/assets/07.png");
+        this.load.image(enums_1.UncoveredTextures.N08, "/assets/08.png");
     }
     /**
      * Called when the assets are loaded and usually contains creation of the main game objects (background, player, obstacles, enemies, etc.).
@@ -57,7 +66,17 @@ class GridScene extends phaser_1.Scene {
         }).flat();
         // initialize event emitters.
         this.input.mouse.disableContextMenu();
+        // const handleClickInput = ( _pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
+        //     if(this.lClicks == 1) {
+        //         gameObject.emit( EmitterEvents.CLICKED, _pointer );
+        //     } else {
+        //         gameObject.emit( EmitterEvents.DOUBLE_CLICKED, _pointer );
+        //     }
+        //     this.lClicks = 0;
+        // };
         this.input.on(enums_2.InputEventType.GAMEOBJECT_DOWN, (_pointer, gameObject) => {
+            // this.lClicks++;
+            // this.time.delayedCall(300, handleClickInput, [_pointer, gameObject], this);
             gameObject.emit(enums_2.EmitterEvents.CLICKED, _pointer);
         });
         this.input.on(enums_2.InputEventType.GAMEOBJECT_OVER, (_pointer, gameObject) => {

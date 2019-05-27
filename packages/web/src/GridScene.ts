@@ -2,7 +2,7 @@
 import { GameObjects,  Input, Scene } from "phaser";
 import CellObj from "./CellObj";
 import {Grid} from "@minesweeper/core/lib";
-import { Textures } from "./enums";
+import { Textures, UncoveredTextures } from "./enums";
 
 //Color,
 import {  EmitterEvents, InputEventType } from "./enums";
@@ -23,12 +23,12 @@ const defaultParams: InitParams = {
 }
 
 
-
 export default class GridScene extends Scene {
     mines: number;
     flagsRemaining: number;
     params: InitParams;
     cellObjs: CellObj[] = [];
+    lClicks: number = 0;
 
     constructor(){
         super(config);
@@ -52,11 +52,21 @@ export default class GridScene extends Scene {
 
         // this.load.atlas("tiles","assets/tileset.png","assets/minesweeper_tileset.json");
         this.load.image(Textures.COVERED, "/assets/09.png");
-        this.load.image(Textures.EMPTY, "/assets/10.png");
+        this.load.image(UncoveredTextures.EMPTY, "/assets/10.png");
         this.load.image(Textures.FLAGGED, "/assets/11.png");
         this.load.image(Textures.HOVER, "/assets/12.png");
         this.load.image(Textures.ADJACENT, "/assets/13.png");
         this.load.image(Textures.MINED, "/assets/14.png");
+
+        this.load.image(UncoveredTextures.N01, "/assets/01.png");
+        this.load.image(UncoveredTextures.N02, "/assets/02.png");
+        this.load.image(UncoveredTextures.N03, "/assets/03.png");
+        this.load.image(UncoveredTextures.N04, "/assets/04.png");
+        this.load.image(UncoveredTextures.N05, "/assets/05.png");
+        this.load.image(UncoveredTextures.N06, "/assets/06.png");
+        this.load.image(UncoveredTextures.N07, "/assets/07.png");
+        this.load.image(UncoveredTextures.N08, "/assets/08.png");
+
     }
 
     /**
@@ -74,7 +84,18 @@ export default class GridScene extends Scene {
         // initialize event emitters.
         this.input.mouse.disableContextMenu();
 
+        // const handleClickInput = ( _pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
+        //     if(this.lClicks == 1) {
+        //         gameObject.emit( EmitterEvents.CLICKED, _pointer );
+        //     } else {
+        //         gameObject.emit( EmitterEvents.DOUBLE_CLICKED, _pointer );
+        //     }
+        //     this.lClicks = 0;
+        // };
+
         this.input.on( InputEventType.GAMEOBJECT_DOWN, ( _pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
+            // this.lClicks++;
+            // this.time.delayedCall(300, handleClickInput, [_pointer, gameObject], this);
             gameObject.emit( EmitterEvents.CLICKED, _pointer );
         })
 

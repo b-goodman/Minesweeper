@@ -7,8 +7,8 @@ const phaser_1 = require("phaser");
 const GridScene_1 = __importDefault(require("./GridScene"));
 const config = {
     type: Phaser.AUTO,
-    width: 600,
-    height: 600,
+    width: 900,
+    height: 900,
     parent: "main",
     scene: [GridScene_1.default],
 };

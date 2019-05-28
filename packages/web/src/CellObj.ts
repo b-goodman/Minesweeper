@@ -10,6 +10,7 @@ const isArrayEqual = <T>( arr1:Array<T>, arr2:Array<T> ) => {
     })
 };
 
+
 export default class CellObj extends GameObjects.Sprite {
     static  ADJACENCY_COORDS: Coord[] = [];
     cellData: Cell;
@@ -26,8 +27,8 @@ export default class CellObj extends GameObjects.Sprite {
         this.cellData = data.cellObj
     }
 
-    refreshState ():void {
 
+    refreshState ():void {
         if ( this.isAdajcentToHovered() ){
             this.setTexture(Textures.ADJACENT);
         } else if ( this.isHover && !this.cellData.isFlagged ){
@@ -69,8 +70,8 @@ export default class CellObj extends GameObjects.Sprite {
         }
     }
 
-    hoverInEventHandler ():void {
 
+    hoverInEventHandler ():void {
         if ( !this.cellData.isCovered ){
             const highlightAdjCells = this.cellData.getAdjacentCoveredCells().map( cell => cell.coordinate );
             CellObj.ADJACENCY_COORDS = highlightAdjCells;
@@ -80,14 +81,18 @@ export default class CellObj extends GameObjects.Sprite {
         }
     }
 
+
     hoverOutEventHandler ():void {
         if ( this.cellData.isCovered ){
             this.isHover = false;
         }
     }
 
+
     isAdajcentToHovered ():boolean {
-        return CellObj.ADJACENCY_COORDS.some( e => {return isArrayEqual(e, this.cellData.coordinate )});
+        return CellObj.ADJACENCY_COORDS.some( e => {
+            return isArrayEqual(e, this.cellData.coordinate )
+        });
     }
 
 

@@ -15,7 +15,7 @@ const config = {
     key: "GridScene",
 };
 const defaultParams = {
-    rows: 10,
+    rows: 15,
     cellWidth: 60,
 };
 class GridScene extends phaser_1.Scene {

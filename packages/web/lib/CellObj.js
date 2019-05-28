@@ -76,7 +76,9 @@ class CellObj extends phaser_1.GameObjects.Sprite {
         }
     }
     isAdajcentToHovered() {
-        return CellObj.ADJACENCY_COORDS.some(e => { return isArrayEqual(e, this.cellData.coordinate); });
+        return CellObj.ADJACENCY_COORDS.some(e => {
+            return isArrayEqual(e, this.cellData.coordinate);
+        });
     }
 }
 CellObj.ADJACENCY_COORDS = [];

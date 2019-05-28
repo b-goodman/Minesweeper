@@ -18,7 +18,7 @@ interface InitParams {
 }
 
 const defaultParams: InitParams = {
-    rows:10,
+    rows:15,
     cellWidth: 60,
 }
 

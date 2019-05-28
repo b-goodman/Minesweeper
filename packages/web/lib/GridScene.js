@@ -23,6 +23,7 @@ class GridScene extends phaser_1.Scene {
         super(config);
         this.cellObjs = [];
         this.lClicks = 0;
+        this.doubleClickDelay = 170;
     }
     /**
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
@@ -61,23 +62,24 @@ class GridScene extends phaser_1.Scene {
         this.cellObjs = new Array(lib_1.Grid.nRows).fill(undefined).map((_elem, index_i) => {
             return new Array(lib_1.Grid.nRows).fill(undefined).map((_elem, index_j) => {
                 const p0 = { x: (index_j * this.params.cellWidth) + this.params.cellWidth / 2, y: (index_i * this.params.cellWidth) + this.params.cellWidth / 2 };
-                return this.add.existing(new CellObj_1.default(this, p0, { index: [index_i, index_j] }));
+                return this.add.existing(new CellObj_1.default(this, p0, { cellObj: lib_1.Grid.getCell([index_i, index_j]) }));
             });
         }).flat();
         // initialize event emitters.
         this.input.mouse.disableContextMenu();
-        // const handleClickInput = ( _pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
-        //     if(this.lClicks == 1) {
-        //         gameObject.emit( EmitterEvents.CLICKED, _pointer );
-        //     } else {
-        //         gameObject.emit( EmitterEvents.DOUBLE_CLICKED, _pointer );
-        //     }
-        //     this.lClicks = 0;
-        // };
-        this.input.on(enums_2.InputEventType.GAMEOBJECT_DOWN, (_pointer, gameObject) => {
-            // this.lClicks++;
-            // this.time.delayedCall(300, handleClickInput, [_pointer, gameObject], this);
-            gameObject.emit(enums_2.EmitterEvents.CLICKED, _pointer);
+        const handleClickInput = (pointer, gameObject, whichBtn) => {
+            if (this.lClicks == 1) {
+                gameObject.emit(enums_2.EmitterEvents.CLICKED, pointer, whichBtn);
+            }
+            else {
+                gameObject.emit(enums_2.EmitterEvents.DOUBLE_CLICKED, pointer, whichBtn);
+            }
+            this.lClicks = 0;
+        };
+        this.input.on(enums_2.InputEventType.GAMEOBJECT_DOWN, (pointer, gameObject) => {
+            const whichBtn = pointer.rightButtonDown() ? enums_2.EmitterEvents.POINTER_RIGHT : enums_2.EmitterEvents.POINTER_LEFT;
+            this.lClicks++;
+            this.time.delayedCall(this.doubleClickDelay, handleClickInput, [pointer, gameObject, whichBtn], this);
         });
         this.input.on(enums_2.InputEventType.GAMEOBJECT_OVER, (_pointer, gameObject) => {
             gameObject.emit(enums_2.EmitterEvents.HOVER_IN, _pointer);

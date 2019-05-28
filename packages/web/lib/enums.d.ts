@@ -11,7 +11,9 @@ export declare enum EmitterEvents {
     HOVER_OUT = "hoverOut",
     ADJACENCY_ON = "adjacencyOn",
     ADJACENCY_OFF = "adjacencyOff",
-    REFRESH_STATE = "updateState"
+    REFRESH_STATE = "updateState",
+    POINTER_LEFT = "pointer_left",
+    POINTER_RIGHT = "pointer_right"
 }
 export declare enum Textures {
     COVERED = "cover",

@@ -1,6 +1,6 @@
 import { EmitterEvents, Textures, UncoveredTexturesMap } from './enums';
 import { GameObjects, Input, Scene } from "phaser";
-import {Grid} from "@minesweeper/core/lib";
+import { Cell } from "@minesweeper/core/lib";
 import { Coord } from '@minesweeper/core/lib/interfaces';
 
 
@@ -12,10 +12,10 @@ const isArrayEqual = <T>( arr1:Array<T>, arr2:Array<T> ) => {
 
 export default class CellObj extends GameObjects.Sprite {
     static  ADJACENCY_COORDS: Coord[] = [];
-    cellIndex: Coord;
+    cellData: Cell;
     isHover: boolean = false;
 
-    constructor(scene: Scene, pos:{x:number,y:number}, params:{index:Coord}){
+    constructor(scene: Scene, pos:{x:number,y:number}, data:{cellObj:Cell}){
         super(scene, pos.x, pos.y, Textures.COVERED);
         this.setInteractive();
         this.on( EmitterEvents.CLICKED, this.clickEventHandler);
@@ -23,21 +23,18 @@ export default class CellObj extends GameObjects.Sprite {
         this.on( EmitterEvents.HOVER_IN, this.hoverInEventHandler);
         this.on( EmitterEvents.HOVER_OUT, this.hoverOutEventHandler);
 
-        // TODO - change to this.cell = Grid.getCell(index)
-        this.cellIndex = params.index;
+        this.cellData = data.cellObj
     }
 
     refreshState ():void {
 
-        const cellData = Grid.getCell(this.cellIndex);
-
         if ( this.isAdajcentToHovered() ){
             this.setTexture(Textures.ADJACENT);
-        } else if ( this.isHover && !cellData.isFlagged ){
+        } else if ( this.isHover && !this.cellData.isFlagged ){
             this.setTexture(Textures.HOVER);
-        }else if ( !cellData.isCovered ) {
-            this.setTexture(cellData.isMined ? Textures.MINED : UncoveredTexturesMap.lookup(cellData.adjacentMines) );
-        } else if ( cellData.isFlagged ) {
+        }else if ( !this.cellData.isCovered ) {
+            this.setTexture(this.cellData.isMined ? Textures.MINED : UncoveredTexturesMap.lookup(this.cellData.adjacentMines) );
+        } else if ( this.cellData.isFlagged ) {
             this.setTexture(Textures.FLAGGED);
         } else {
             this.setTexture(Textures.COVERED);
@@ -45,30 +42,37 @@ export default class CellObj extends GameObjects.Sprite {
     }
 
 
-    clickEventHandler (pointer:Input.Pointer):void {
+    clickEventHandler ( _pointer:Input.Pointer, whichBtn: EmitterEvents.POINTER_RIGHT | EmitterEvents.POINTER_LEFT ):void {
         this.isHover = false;
-
-        switch (pointer.buttons) {
-            case 1:
-                Grid.getCell(this.cellIndex).uncover();
+        switch (whichBtn) {
+            case EmitterEvents.POINTER_LEFT:
+                    this.cellData.uncover();
                 break;
-            case 2:
-                Grid.getCell(this.cellIndex).toggleFlag();
+            case EmitterEvents.POINTER_RIGHT:
+                    this.cellData.toggleFlag();
                 break;
             default:
                 break;
         }
-        console.log(Grid.getCell(this.cellIndex))
+        console.log(this.cellData)
     }
 
-    doubleClickEventHandler (pointer:Input.Pointer):void {
-        pointer.buttons === 1 ? console.log("L double click detected") : console.log("other double click detected")
+    doubleClickEventHandler ( _pointer:Input.Pointer, whichBtn: EmitterEvents.POINTER_RIGHT | EmitterEvents.POINTER_LEFT ):void {
+        // uncover unflagged adjacent cells, as indicated on hover
+        switch (whichBtn) {
+            case EmitterEvents.POINTER_LEFT:
+                    CellObj.ADJACENCY_COORDS = [];
+                    this.cellData.getAdjacentCoveredCells().map( cell => cell.uncover() );
+                break;
+            default:
+                break;
+        }
     }
 
     hoverInEventHandler ():void {
-        const cellData = Grid.getCell(this.cellIndex);
-        if ( !cellData.isCovered ){
-            const highlightAdjCells = cellData.getAdjacentCoveredCells().map( cell => cell.coordinate );
+
+        if ( !this.cellData.isCovered ){
+            const highlightAdjCells = this.cellData.getAdjacentCoveredCells().map( cell => cell.coordinate );
             CellObj.ADJACENCY_COORDS = highlightAdjCells;
         } else {
             this.isHover = true;
@@ -77,13 +81,13 @@ export default class CellObj extends GameObjects.Sprite {
     }
 
     hoverOutEventHandler ():void {
-        if ( Grid.getCell(this.cellIndex).isCovered ){
+        if ( this.cellData.isCovered ){
             this.isHover = false;
         }
     }
 
     isAdajcentToHovered ():boolean {
-        return CellObj.ADJACENCY_COORDS.some( e => {return isArrayEqual(e, this.cellIndex )});
+        return CellObj.ADJACENCY_COORDS.some( e => {return isArrayEqual(e, this.cellData.coordinate )});
     }
 
 

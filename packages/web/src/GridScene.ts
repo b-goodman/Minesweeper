@@ -29,6 +29,7 @@ export default class GridScene extends Scene {
     params: InitParams;
     cellObjs: CellObj[] = [];
     lClicks: number = 0;
+    doubleClickDelay: number = 170;
 
     constructor(){
         super(config);
@@ -77,26 +78,26 @@ export default class GridScene extends Scene {
         this.cellObjs = new Array(Grid.nRows).fill(undefined).map( ( _elem, index_i) => {
             return new Array(Grid.nRows).fill(undefined).map( ( _elem, index_j ) => {
                 const p0 = {x: (index_j * this.params.cellWidth) + this.params.cellWidth/2  , y: (index_i * this.params.cellWidth) + this.params.cellWidth/2};
-                return this.add.existing( new CellObj(this, p0, {index: [index_i,index_j] }) ) as CellObj;
+                return this.add.existing( new CellObj(this, p0, {cellObj: Grid.getCell([index_i,index_j]) }) ) as CellObj;
             })
         }).flat();
 
         // initialize event emitters.
         this.input.mouse.disableContextMenu();
 
-        // const handleClickInput = ( _pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
-        //     if(this.lClicks == 1) {
-        //         gameObject.emit( EmitterEvents.CLICKED, _pointer );
-        //     } else {
-        //         gameObject.emit( EmitterEvents.DOUBLE_CLICKED, _pointer );
-        //     }
-        //     this.lClicks = 0;
-        // };
+        const handleClickInput = ( pointer:Input.Pointer, gameObject:GameObjects.Sprite, whichBtn: EmitterEvents.POINTER_RIGHT | EmitterEvents.POINTER_LEFT ) => {
+            if(this.lClicks == 1) {
+                gameObject.emit( EmitterEvents.CLICKED, pointer, whichBtn );
+            } else {
+                gameObject.emit( EmitterEvents.DOUBLE_CLICKED, pointer, whichBtn );
+            }
+            this.lClicks = 0;
+        };
 
-        this.input.on( InputEventType.GAMEOBJECT_DOWN, ( _pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
-            // this.lClicks++;
-            // this.time.delayedCall(300, handleClickInput, [_pointer, gameObject], this);
-            gameObject.emit( EmitterEvents.CLICKED, _pointer );
+        this.input.on( InputEventType.GAMEOBJECT_DOWN, ( pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
+            const whichBtn = pointer.rightButtonDown() ? EmitterEvents.POINTER_RIGHT : EmitterEvents.POINTER_LEFT;
+            this.lClicks++;
+            this.time.delayedCall(this.doubleClickDelay, handleClickInput, [pointer, gameObject, whichBtn], this);
         })
 
         this.input.on( InputEventType.GAMEOBJECT_OVER, ( _pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {

@@ -16,6 +16,8 @@ var EmitterEvents;
     EmitterEvents["ADJACENCY_ON"] = "adjacencyOn";
     EmitterEvents["ADJACENCY_OFF"] = "adjacencyOff";
     EmitterEvents["REFRESH_STATE"] = "updateState";
+    EmitterEvents["POINTER_LEFT"] = "pointer_left";
+    EmitterEvents["POINTER_RIGHT"] = "pointer_right";
 })(EmitterEvents = exports.EmitterEvents || (exports.EmitterEvents = {}));
 var Textures;
 (function (Textures) {

@@ -14,6 +14,8 @@ export enum EmitterEvents {
     ADJACENCY_ON = "adjacencyOn",
     ADJACENCY_OFF = "adjacencyOff",
     REFRESH_STATE = "updateState",
+    POINTER_LEFT = "pointer_left",
+    POINTER_RIGHT = "pointer_right",
 }
 
 export enum Textures {

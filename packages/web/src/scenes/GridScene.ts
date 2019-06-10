@@ -1,27 +1,12 @@
-//Geom, Loader,
 import { GameObjects,  Input, Scene } from "phaser";
-import CellObj from "./CellObj";
+import CellObj from "../objects/CellObj";
 import {Grid} from "@minesweeper/core/lib";
-import { Textures, UncoveredTextures } from "./enums";
 
 //Color,
-import {  EmitterEvents, InputEventType } from "./enums";
+import {  EmitterEvents, InputEventType, SoundKeys } from "../objects/enums";
+import { InitParams } from "..";
+import { Assets } from "../objects/Assets";
 // import { Coord } from "@minesweeper/core/lib/interfaces"
-
-const config = {
-    key: "GridScene",
-}
-
-interface InitParams {
-    rows: number,
-    cellWidth: number,
-}
-
-const defaultParams: InitParams = {
-    rows:15,
-    cellWidth: 60,
-}
-
 
 export default class GridScene extends Scene {
     mines: number;
@@ -31,19 +16,22 @@ export default class GridScene extends Scene {
     lClicks: number = 0;
     doubleClickDelay: number = 170;
 
+
     constructor(){
-        super(config);
+        super({
+            key: "GridScene",
+        });
     }
 
     /**
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
      * @param params
      */
-    init(params:InitParams = defaultParams): void {
-        new Grid( params.rows, {} );
+    init(params:InitParams): void {
+        new Grid( params.rows );
         this.flagsRemaining = this.mines = Grid.nMines;
         this.params = params;
-        console.log(`init params: ${JSON.stringify(params)}`);
+        this.data.set('isGameOver', false);
     }
 
     /**
@@ -51,22 +39,7 @@ export default class GridScene extends Scene {
      */
     preload(): void {
 
-        // this.load.atlas("tiles","assets/tileset.png","assets/minesweeper_tileset.json");
-        this.load.image(Textures.COVERED, "/assets/09.png");
-        this.load.image(UncoveredTextures.EMPTY, "/assets/10.png");
-        this.load.image(Textures.FLAGGED, "/assets/11.png");
-        this.load.image(Textures.HOVER, "/assets/12.png");
-        this.load.image(Textures.ADJACENT, "/assets/13.png");
-        this.load.image(Textures.MINED, "/assets/14.png");
-
-        this.load.image(UncoveredTextures.N01, "/assets/01.png");
-        this.load.image(UncoveredTextures.N02, "/assets/02.png");
-        this.load.image(UncoveredTextures.N03, "/assets/03.png");
-        this.load.image(UncoveredTextures.N04, "/assets/04.png");
-        this.load.image(UncoveredTextures.N05, "/assets/05.png");
-        this.load.image(UncoveredTextures.N06, "/assets/06.png");
-        this.load.image(UncoveredTextures.N07, "/assets/07.png");
-        this.load.image(UncoveredTextures.N08, "/assets/08.png");
+        new Assets(this);
 
     }
 
@@ -74,6 +47,8 @@ export default class GridScene extends Scene {
      * Called when the assets are loaded and usually contains creation of the main game objects (background, player, obstacles, enemies, etc.).
      */
     create(): void {
+
+        Assets.addSounds();
 
         this.cellObjs = new Array(Grid.nRows).fill(undefined).map( ( _elem, index_i) => {
             return new Array(Grid.nRows).fill(undefined).map( ( _elem, index_j ) => {
@@ -88,10 +63,16 @@ export default class GridScene extends Scene {
         const handleClickInput = ( pointer:Input.Pointer, gameObject:GameObjects.Sprite, whichBtn: EmitterEvents.POINTER_RIGHT | EmitterEvents.POINTER_LEFT ) => {
             if(this.lClicks == 1) {
                 gameObject.emit( EmitterEvents.CLICKED, pointer, whichBtn );
+                Assets.Sounds.get(SoundKeys.UNCOVERED_1 ).play();
             } else {
                 gameObject.emit( EmitterEvents.DOUBLE_CLICKED, pointer, whichBtn );
             }
             this.lClicks = 0;
+        };
+
+        const handleGameOver = () => {
+            console.log("game over");
+            this.cellObjs.forEach( obj => obj.disableInteractive() );
         };
 
         this.input.on( InputEventType.GAMEOBJECT_DOWN, ( pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
@@ -108,6 +89,12 @@ export default class GridScene extends Scene {
             gameObject.emit( EmitterEvents.HOVER_OUT, _pointer );
         })
 
+        this.events.once( EmitterEvents.MINE_UNCOVERED, () => {
+            handleGameOver();
+        })
+
+
+
     }
 
     /**
@@ -116,7 +103,7 @@ export default class GridScene extends Scene {
      */
     update(): void {
         // TODO
-        this.cellObjs.forEach( obj => obj.refreshState() )
+        this.cellObjs.forEach( obj => obj.refreshState() );
     }
 
 }

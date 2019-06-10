@@ -1,14 +1,9 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const Cell_1 = __importDefault(require("./Cell"));
-class Grid {
-    constructor(nRows, opts = {}) {
+import Cell from "./Cell";
+export default class Grid {
+    constructor(nRows, { mines } = {}) {
         Grid.nRows = nRows;
         Grid.nColumns = nRows;
-        Grid.nMines = opts.mines || Math.floor(nRows + (Math.pow(nRows, 1.4) / 4)) - 3;
+        Grid.nMines = mines || Math.floor(nRows + Math.pow(nRows, 1.3)) - 3;
         /**
          * gridConstructor will hold the constructor arguments for the Cell which shall take it's place in the array's elements
          */
@@ -50,7 +45,7 @@ class Grid {
         // construct cells
         Grid._Cells = gridConstructor.map(elem => {
             return elem.map(inner => {
-                return new Cell_1.default(inner);
+                return new Cell(inner);
             });
         });
     }
@@ -112,4 +107,4 @@ class Grid {
     }
     ;
 }
-exports.default = Grid;
+//# sourceMappingURL=Grid.js.map

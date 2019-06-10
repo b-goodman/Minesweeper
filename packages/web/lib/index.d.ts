@@ -1,5 +1,5 @@
-import { Game } from "phaser";
-export declare class MinesweeperGame extends Game {
-    constructor(config: any);
+export interface InitParams {
+    rows?: number;
+    cellWidth?: number;
 }
 //# sourceMappingURL=index.d.ts.map

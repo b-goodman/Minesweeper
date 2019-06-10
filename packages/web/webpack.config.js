@@ -81,6 +81,7 @@ const optimizationConf = () => {
 pack = (outputSpec) => {
     return {
         mode: "production",
+        // mode: "development",
         entry: entryPath(),
         output: outputSpec,
         module: moduleObj(),

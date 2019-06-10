@@ -1,7 +1,8 @@
-import { EmitterEvents, Textures, UncoveredTexturesMap } from './enums';
+import { EmitterEvents, Textures} from './enums';
 import { GameObjects, Input, Scene } from "phaser";
-import { Cell } from "@minesweeper/core/lib";
+import { Cell, Grid } from "@minesweeper/core/lib";
 import { Coord } from '@minesweeper/core/lib/interfaces';
+import { Assets } from './Assets';
 
 
 const isArrayEqual = <T>( arr1:Array<T>, arr2:Array<T> ) => {
@@ -16,6 +17,8 @@ export default class CellObj extends GameObjects.Sprite {
     cellData: Cell;
     isHover: boolean = false;
 
+
+
     constructor(scene: Scene, pos:{x:number,y:number}, data:{cellObj:Cell}){
         super(scene, pos.x, pos.y, Textures.COVERED);
         this.setInteractive();
@@ -23,10 +26,8 @@ export default class CellObj extends GameObjects.Sprite {
         this.on( EmitterEvents.DOUBLE_CLICKED, this.doubleClickEventHandler);
         this.on( EmitterEvents.HOVER_IN, this.hoverInEventHandler);
         this.on( EmitterEvents.HOVER_OUT, this.hoverOutEventHandler);
-
         this.cellData = data.cellObj
     }
-
 
     refreshState ():void {
         if ( this.isAdajcentToHovered() ){
@@ -34,7 +35,13 @@ export default class CellObj extends GameObjects.Sprite {
         } else if ( this.isHover && !this.cellData.isFlagged ){
             this.setTexture(Textures.HOVER);
         }else if ( !this.cellData.isCovered ) {
-            this.setTexture(this.cellData.isMined ? Textures.MINED : UncoveredTexturesMap.lookup(this.cellData.adjacentMines) );
+            if (this.cellData.isMined){
+                this.setTexture(Textures.MINED);
+                this.scene.events.emit(EmitterEvents.MINE_UNCOVERED);
+                Grid.uncoverRemainingMines();
+            } else {
+                this.setTexture( Assets.UncoveredTextures.get(this.cellData.adjacentMines) );
+            }
         } else if ( this.cellData.isFlagged ) {
             this.setTexture(Textures.FLAGGED);
         } else {

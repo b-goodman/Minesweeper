@@ -1,11 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const Grid_1 = __importDefault(require("./Grid"));
+import Grid from './Grid';
 ;
-class Cell {
+export default class Cell {
     constructor(args) {
         this.coordinate = args.coordinate;
         this.mined = args.isMined;
@@ -46,11 +41,11 @@ class Cell {
     }
     ;
     isEmpty() {
-        return !this.isFlagged && this.neighbouringMines === 0;
+        return !this.isFlagged && this.neighbouringMines === 0 && !this.isMined;
     }
     ;
     getAdjacentCells() {
-        return Grid_1.default.getAdjacentCoords(this.coordinate).map(pos => Grid_1.default.getCell(pos));
+        return Grid.getAdjacentCoords(this.coordinate).map(pos => Grid.getCell(pos));
     }
     ;
     getAdjacentCoveredCells() {
@@ -82,4 +77,4 @@ class Cell {
     }
     ;
 }
-exports.default = Cell;
+//# sourceMappingURL=Cell.js.map

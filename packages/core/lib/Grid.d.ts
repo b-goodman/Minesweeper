@@ -5,7 +5,7 @@ export default class Grid {
     static nColumns: number;
     static nMines: number;
     private static _Cells;
-    constructor(nRows: any, opts?: {
+    constructor(nRows: number, { mines }?: {
         mines?: number;
     });
     private static getRandomIntInclusive;

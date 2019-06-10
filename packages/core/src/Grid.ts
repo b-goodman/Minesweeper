@@ -9,10 +9,10 @@ export default class Grid {
     // private static loseCondition: boolean;
     private static _Cells: Cell[][];
 
-    constructor(nRows, opts:{mines?:number}={}){
+    constructor(nRows:number, {mines}:{mines?:number}={}){
         Grid.nRows = nRows;
         Grid.nColumns = nRows;
-        Grid.nMines = opts.mines || Math.floor(nRows + (Math.pow(nRows, 1.4) / 4)) - 3;
+        Grid.nMines = mines || Math.floor(nRows + Math.pow(nRows, 1.3) ) - 3;
 
         /**
          * gridConstructor will hold the constructor arguments for the Cell which shall take it's place in the array's elements

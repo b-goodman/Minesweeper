@@ -59,7 +59,7 @@ export default class Cell {
   };
 
   public isEmpty(): boolean {
-    return !this.isFlagged && this.neighbouringMines === 0;
+    return !this.isFlagged && this.neighbouringMines === 0 && !this.isMined;
   };
 
   public getAdjacentCells(): readonly Cell[] {

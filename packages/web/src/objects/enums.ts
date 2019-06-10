@@ -16,6 +16,7 @@ export enum EmitterEvents {
     REFRESH_STATE = "updateState",
     POINTER_LEFT = "pointer_left",
     POINTER_RIGHT = "pointer_right",
+    MINE_UNCOVERED = "mine_uncovered",
 }
 
 export enum Textures {
@@ -38,15 +39,17 @@ export enum UncoveredTextures {
     N08 = "n08",
 }
 
-
-
-export class UncoveredTexturesMap {
-
-    private static textures = new Map(new Array(8+1).fill(undefined).map( (_e, i) => {
-        return `n${i.toString(10).padStart(2,"0")}`}).entries()
-    );
-
-    static lookup (index:number) {
-        return UncoveredTexturesMap.textures.get(index)
-    }
+export enum SoundKeys {
+    UNCOVERED_1 = "UNCOVERED_1",
+    UNCOVERED_2 = "UNCOVERED_2",
+    UNCOVERED_LONG_1 = "UNCOVERED_LONG_1",
+    MINE_UNCOVER_1 = "MINE_UNCOVER_1",
+    FLAGGED_1 = "FLAGGED_1",
+    FLAGGED_2 = "FLAGGED_2",
+    FLAGGED_3 = "FLAGGED_3",
+    UNFLAG_1 = "UNFLAG_1",
+    UNFLAG_2 = "UNFLAG_2"
 }
+
+
+

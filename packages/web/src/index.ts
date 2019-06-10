@@ -1,24 +1,37 @@
-import {Game} from "phaser";
-import GridScene from "./GridScene";
+import {Game, Scale} from "phaser";
+import GridScene from "./scenes/GridScene";
 
 
-const config = {
+const gameConfig = {
     type: Phaser.AUTO,
-    width: 900,
-    height: 900,
+    width: 600,
+    height: 600,
     parent: "main",
     scene: [GridScene],
+    scale:{
+        mode: Scale.FIT,
+        autoCenter: Scale.CENTER_BOTH,
+    },
+    audio: {
+        disableWebAudio: true
+    },
 };
 
-
-export class MinesweeperGame extends Game {
+class MinesweeperGame extends Game {
     constructor(config){
         super(config)
     }
-
 }
 
+export interface InitParams { rows?: number, cellWidth?: number,};
+
+const gridSceneParams: InitParams = {
+    rows:10,
+    cellWidth: 60,
+}
+
+
 window.onload = () => {
-    const msGame = new MinesweeperGame(config);
-    msGame.scene.start("GridScene");
+    const msGame = new MinesweeperGame(gameConfig);
+    msGame.scene.start("GridScene", gridSceneParams );
 }

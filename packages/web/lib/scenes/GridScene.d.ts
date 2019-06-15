@@ -3,7 +3,6 @@ import CellObj from "../objects/CellObj";
 import { InitParams } from "..";
 export default class GridScene extends Scene {
     mines: number;
-    flagsRemaining: number;
     params: InitParams;
     cellObjs: CellObj[];
     lClicks: number;

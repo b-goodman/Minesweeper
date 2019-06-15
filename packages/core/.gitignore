@@ -3,6 +3,8 @@ build
 test
 src/**.js
 .idea/*
+.vscode
+.rpt2_cache
 
 coverage
 .nyc_output

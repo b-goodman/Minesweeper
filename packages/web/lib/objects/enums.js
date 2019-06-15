@@ -18,8 +18,14 @@ var EmitterEvents;
     EmitterEvents["REFRESH_STATE"] = "updateState";
     EmitterEvents["POINTER_LEFT"] = "pointer_left";
     EmitterEvents["POINTER_RIGHT"] = "pointer_right";
-    EmitterEvents["MINE_UNCOVERED"] = "mine_uncovered";
 })(EmitterEvents = exports.EmitterEvents || (exports.EmitterEvents = {}));
+var GameEvents;
+(function (GameEvents) {
+    GameEvents["MINE_REVEALED"] = "mine_uncovered";
+    GameEvents["CELL_UNCOVERED"] = "cell_uncovered";
+    GameEvents["CELL_FLAGGED"] = "cell_flagged";
+    GameEvents["CELL_UNFLAGGED"] = "cell_unflagged";
+})(GameEvents = exports.GameEvents || (exports.GameEvents = {}));
 var Textures;
 (function (Textures) {
     Textures["COVERED"] = "cover";

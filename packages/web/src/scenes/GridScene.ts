@@ -1,21 +1,21 @@
+import { GameEvents, SoundKeys } from "../objects/enums";
 import { GameObjects,  Input, Scene } from "phaser";
-import CellObj from "../objects/CellObj";
-import {Grid} from "@minesweeper/core/lib";
 
-//Color,
-import {  EmitterEvents, InputEventType, SoundKeys } from "../objects/enums";
+import {Minesweeper} from "@minesweeper/core"
+
+import {  EmitterEvents, InputEventType } from "../objects/enums";
 import { InitParams } from "..";
 import { Assets } from "../objects/Assets";
-// import { Coord } from "@minesweeper/core/lib/interfaces"
+import CellObj from "../objects/CellObj";
+
+
 
 export default class GridScene extends Scene {
     mines: number;
-    flagsRemaining: number;
     params: InitParams;
     cellObjs: CellObj[] = [];
     lClicks: number = 0;
     doubleClickDelay: number = 170;
-
 
     constructor(){
         super({
@@ -28,10 +28,9 @@ export default class GridScene extends Scene {
      * @param params
      */
     init(params:InitParams): void {
-        new Grid( params.rows );
-        this.flagsRemaining = this.mines = Grid.nMines;
+        new Minesweeper( params.rows );
+        this.mines = Minesweeper.nMines;
         this.params = params;
-        this.data.set('isGameOver', false);
     }
 
     /**
@@ -48,12 +47,16 @@ export default class GridScene extends Scene {
      */
     create(): void {
 
+        this.data.set("flagsRemaining", this.mines);
+        this.data.set("timeElapsed", 0);
+        this.data.set("isGameOver", false);
+
         Assets.addSounds();
 
-        this.cellObjs = new Array(Grid.nRows).fill(undefined).map( ( _elem, index_i) => {
-            return new Array(Grid.nRows).fill(undefined).map( ( _elem, index_j ) => {
+        this.cellObjs = new Array(Minesweeper.nRows).fill(undefined).map( ( _elem, index_i) => {
+            return new Array(Minesweeper.nRows).fill(undefined).map( ( _elem, index_j ) => {
                 const p0 = {x: (index_j * this.params.cellWidth) + this.params.cellWidth/2  , y: (index_i * this.params.cellWidth) + this.params.cellWidth/2};
-                return this.add.existing( new CellObj(this, p0, {cellObj: Grid.getCell([index_i,index_j]) }) ) as CellObj;
+                return this.add.existing( new CellObj(this, p0, {cellObj: Minesweeper.getCell([index_i,index_j]) }) ) as CellObj;
             })
         }).flat();
 
@@ -63,7 +66,6 @@ export default class GridScene extends Scene {
         const handleClickInput = ( pointer:Input.Pointer, gameObject:GameObjects.Sprite, whichBtn: EmitterEvents.POINTER_RIGHT | EmitterEvents.POINTER_LEFT ) => {
             if(this.lClicks == 1) {
                 gameObject.emit( EmitterEvents.CLICKED, pointer, whichBtn );
-                Assets.Sounds.get(SoundKeys.UNCOVERED_1 ).play();
             } else {
                 gameObject.emit( EmitterEvents.DOUBLE_CLICKED, pointer, whichBtn );
             }
@@ -72,7 +74,9 @@ export default class GridScene extends Scene {
 
         const handleGameOver = () => {
             console.log("game over");
+            Minesweeper.uncoverRemainingMines();
             this.cellObjs.forEach( obj => obj.disableInteractive() );
+            this.data.values.isGameOver = true;
         };
 
         this.input.on( InputEventType.GAMEOBJECT_DOWN, ( pointer:Input.Pointer, gameObject:GameObjects.Sprite) => {
@@ -89,8 +93,25 @@ export default class GridScene extends Scene {
             gameObject.emit( EmitterEvents.HOVER_OUT, _pointer );
         })
 
-        this.events.once( EmitterEvents.MINE_UNCOVERED, () => {
+        this.events.once( GameEvents.MINE_REVEALED, () => {
+            Assets.Sounds.get(SoundKeys.MINE_UNCOVER_1).play();
             handleGameOver();
+        })
+
+        this.events.on( GameEvents.CELL_FLAGGED, () => {
+            Assets.Sounds.get(SoundKeys.FLAGGED_2 ).play();
+        })
+
+        this.events.on( GameEvents.CELL_UNFLAGGED, () => {
+            Assets.Sounds.get(SoundKeys.UNFLAG_1).play();
+        })
+
+        this.events.on( GameEvents.CELL_UNCOVERED, () => {
+            Assets.Sounds.get(SoundKeys.UNCOVERED_1).play();
+        })
+
+        this.data.events.on("changekey-flagsRemaining", (_parent:this, _key:"flagsRemaining", value:number, prevValue:boolean) => {
+            console.log(`value:${prevValue} new value:${value}`);
         })
 
 

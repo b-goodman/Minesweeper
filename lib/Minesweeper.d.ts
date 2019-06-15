@@ -1,6 +1,6 @@
-import Cell from "./Cell";
+import { Cell } from "./Cell";
 import { Coord } from "./interfaces";
-export default class Grid {
+export declare class Minesweeper {
     static nRows: number;
     static nColumns: number;
     static nMines: number;
@@ -22,4 +22,4 @@ export default class Grid {
     static columns(): number;
     static readonly mines: number;
 }
-//# sourceMappingURL=Grid.d.ts.map
+//# sourceMappingURL=Minesweeper.d.ts.map

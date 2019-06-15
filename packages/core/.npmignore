@@ -12,3 +12,5 @@ build/docs
 coverage
 *.log
 docs
+.rpt2_cache
+.vscode

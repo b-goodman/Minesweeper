@@ -1,13 +1,5 @@
-import Grid from "./Grid";
-import Cell, {CellStates} from "./Cell";
+import { Cell } from './Cell';
+import { Minesweeper } from './Minesweeper';
+import { Coord, CellEvents } from "./interfaces"
 
-const Game = ( rows:number, options:{mines?:number}={} ):Grid => {
-		new Grid(rows, options);
-		return Grid;
-};
-
-export default Game;
-export {Grid};
-export {Cell};
-export {CellStates};
-
+export { Cell, Minesweeper, Coord, CellEvents }

@@ -1,50 +1,38 @@
-import Grid from './Grid';
-import { Coord, CellConstructor } from './interfaces';
+import {Minesweeper} from './Minesweeper';
+import { Coord, CellConstructor, CellEvents } from './interfaces';
+import events from "events";
 
-// TODO - remove
-export const enum CellStates {
-  COVERED,
-  UNCOVERED,
-  FLAGGED
-};
-
-export default class Cell {
+export class Cell extends events.EventEmitter {
   private readonly mined: boolean;
   public readonly coordinate: Coord;
   private readonly neighbouringMines: number;
   public covered: boolean;
   public flagged: boolean;
   public highlight: boolean;
-  public state: CellStates;
 
   constructor( args: CellConstructor ) {
+    super();
     this.coordinate = args.coordinate;
     this.mined = args.isMined;
     this.neighbouringMines = args.neighbouringMines;
     this.flagged = false;
     this.covered = true;
     this.highlight = false;
-    this.state = CellStates.COVERED;
   };
 
   get isFlagged(): boolean {
     return this.flagged;
   };
 
-  public toggleFlag(): Cell {
+  /**
+   * Returns new state of cell's flag.
+   * Emits an event [CellEvents.UNFLAGGED] or [CellEvents.FLAGGED] depending on the change made.
+   */
+  public toggleFlag(): boolean {
+    this.flagged ? this.emit(CellEvents.UNFLAGGED) : this.emit( CellEvents.FLAGGED );
     this.flagged = !this.flagged;
-    this.state = this.flagged ? CellStates.COVERED : CellStates.UNCOVERED;
-    return this;
+    return this.flagged;
   };
-
-  public toggleHighlight(): boolean {
-    this.highlight = !this.highlight;
-    return this.highlight;
-  }
-
-  public isHighlighted(): boolean {
-    return this.highlight;
-  }
 
   get isCovered(): boolean {
     return this.covered;
@@ -63,7 +51,7 @@ export default class Cell {
   };
 
   public getAdjacentCells(): readonly Cell[] {
-    return Grid.getAdjacentCoords(this.coordinate).map(pos => Grid.getCell(pos));
+    return Minesweeper.getAdjacentCoords(this.coordinate).map(pos => Minesweeper.getCell(pos));
   };
 
   public getAdjacentCoveredCells(): readonly Cell[] {
@@ -81,14 +69,14 @@ export default class Cell {
       this.toggleFlag();
     } else if ( this.isEmpty() && this.isCovered ) {
       this.covered = false;
-      this.state = CellStates.UNCOVERED;
+      this.emit( CellEvents.UNCOVERED );
       const adjacentUncoveredCells: readonly Cell[] = this.getAdjacentCoveredCells();
       adjacentUncoveredCells.forEach( (cellObj) => {
         cellObj.uncover()
       });
     } else {
       this.covered = false;
-      this.state = CellStates.UNCOVERED;
+      this.emit( CellEvents.UNCOVERED );
     }
   };
 

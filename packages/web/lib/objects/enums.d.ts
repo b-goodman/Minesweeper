@@ -13,8 +13,13 @@ export declare enum EmitterEvents {
     ADJACENCY_OFF = "adjacencyOff",
     REFRESH_STATE = "updateState",
     POINTER_LEFT = "pointer_left",
-    POINTER_RIGHT = "pointer_right",
-    MINE_UNCOVERED = "mine_uncovered"
+    POINTER_RIGHT = "pointer_right"
+}
+export declare enum GameEvents {
+    MINE_REVEALED = "mine_uncovered",
+    CELL_UNCOVERED = "cell_uncovered",
+    CELL_FLAGGED = "cell_flagged",
+    CELL_UNFLAGGED = "cell_unflagged"
 }
 export declare enum Textures {
     COVERED = "cover",

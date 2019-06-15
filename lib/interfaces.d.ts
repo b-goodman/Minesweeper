@@ -7,4 +7,9 @@ export interface CellConstructor {
     isMined: boolean;
     neighbouringMines: number;
 }
+export declare const enum CellEvents {
+    UNCOVERED = "uncovered",
+    FLAGGED = "flagged",
+    UNFLAGGED = "unflagged"
+}
 //# sourceMappingURL=interfaces.d.ts.map

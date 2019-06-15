@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const enums_1 = require("./enums");
 const phaser_1 = require("phaser");
-const lib_1 = require("@minesweeper/core/lib");
 const Assets_1 = require("./Assets");
 const isArrayEqual = (arr1, arr2) => {
     return arr1.every((e, i) => {
@@ -19,6 +18,7 @@ class CellObj extends phaser_1.GameObjects.Sprite {
         this.on(enums_1.EmitterEvents.HOVER_IN, this.hoverInEventHandler);
         this.on(enums_1.EmitterEvents.HOVER_OUT, this.hoverOutEventHandler);
         this.cellData = data.cellObj;
+        this.parentScene = scene;
     }
     refreshState() {
         if (this.isAdajcentToHovered()) {
@@ -30,8 +30,7 @@ class CellObj extends phaser_1.GameObjects.Sprite {
         else if (!this.cellData.isCovered) {
             if (this.cellData.isMined) {
                 this.setTexture(enums_1.Textures.MINED);
-                this.scene.events.emit(enums_1.EmitterEvents.MINE_UNCOVERED);
-                lib_1.Grid.uncoverRemainingMines();
+                this.scene.events.emit(enums_1.GameEvents.MINE_REVEALED);
             }
             else {
                 this.setTexture(Assets_1.Assets.UncoveredTextures.get(this.cellData.adjacentMines));
@@ -49,6 +48,7 @@ class CellObj extends phaser_1.GameObjects.Sprite {
         switch (whichBtn) {
             case enums_1.EmitterEvents.POINTER_LEFT:
                 this.cellData.uncover();
+                this.scene.events.emit(enums_1.GameEvents.CELL_UNCOVERED);
                 break;
             case enums_1.EmitterEvents.POINTER_RIGHT:
                 this.cellData.toggleFlag();
@@ -56,7 +56,6 @@ class CellObj extends phaser_1.GameObjects.Sprite {
             default:
                 break;
         }
-        console.log(this.cellData);
     }
     doubleClickEventHandler(_pointer, whichBtn) {
         // uncover unflagged adjacent cells, as indicated on hover

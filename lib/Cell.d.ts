@@ -1,22 +1,20 @@
+/// <reference types="node" />
 import { Coord, CellConstructor } from './interfaces';
-export declare const enum CellStates {
-    COVERED = 0,
-    UNCOVERED = 1,
-    FLAGGED = 2
-}
-export default class Cell {
+import { EventEmitter } from 'events';
+export declare class Cell extends EventEmitter {
     private readonly mined;
     readonly coordinate: Coord;
     private readonly neighbouringMines;
     covered: boolean;
     flagged: boolean;
     highlight: boolean;
-    state: CellStates;
     constructor(args: CellConstructor);
     readonly isFlagged: boolean;
-    toggleFlag(): Cell;
-    toggleHighlight(): boolean;
-    isHighlighted(): boolean;
+    /**
+     * Returns new state of cell's flag.
+     * Emits an event [CellEvents.UNFLAGGED] or [CellEvents.FLAGGED] depending on the change made.
+     */
+    toggleFlag(): boolean;
     readonly isCovered: boolean;
     readonly isMined: boolean;
     readonly adjacentMines: number;

@@ -1,38 +1,37 @@
-import Cell from "./Cell";
+import {Cell} from "./Cell";
 import { Coord } from "./interfaces";
 
-export default class Grid {
+export class Minesweeper {
 
     public static nRows: number;
     public static nColumns: number;
     public static nMines: number;
-    // private static loseCondition: boolean;
-    private static _Cells: Cell[][];
+    public static Cells: Cell[][];
 
-    constructor(nRows:number, {mines}:{mines?:number}={}){
-        Grid.nRows = nRows;
-        Grid.nColumns = nRows;
-        Grid.nMines = mines || Math.floor(nRows + Math.pow(nRows, 1.3) ) - 3;
+    constructor(nRows:number, options:{mines?:number}={} ){
+        Minesweeper.nRows = nRows;
+        Minesweeper.nColumns = nRows;
+        Minesweeper.nMines = options.mines || Math.floor(nRows + Math.pow(nRows, 1.3) ) - 3;
 
         /**
          * gridConstructor will hold the constructor arguments for the Cell which shall take it's place in the array's elements
          */
 
         const fillRows = (rowIndex: number)  => {
-            return new Array(Grid.nRows).fill(undefined).map( (_elem, columnIndex) => {
+            return new Array(Minesweeper.nRows).fill(undefined).map( (_elem, columnIndex) => {
                 return ( {coordinate:<Coord>[rowIndex, columnIndex], isMined: false, neighbouringMines: 0} );
             });
         };
 
-        const gridConstructor = new Array(Grid.nColumns).fill(undefined).map( (_elem, rowIndex) => {
+        const gridConstructor = new Array(Minesweeper.nColumns).fill(undefined).map( (_elem, rowIndex) => {
             return fillRows(rowIndex)
         });
         // set mines
-        let minesRemaining = Grid.nMines;
+        let minesRemaining = Minesweeper.nMines;
         do {
-            for (let i = 0; i < Grid.nRows; i++ ) {
-                for (let j = 0; j < Grid.nColumns; j++) {
-                    if (Grid.getRandomIntInclusive(1, 10) === 10 && !gridConstructor[i][j].isMined && minesRemaining > 0) {
+            for (let i = 0; i < Minesweeper.nRows; i++ ) {
+                for (let j = 0; j < Minesweeper.nColumns; j++) {
+                    if (Minesweeper.getRandomIntInclusive(1, 10) === 10 && !gridConstructor[i][j].isMined && minesRemaining > 0) {
                         gridConstructor[i][j].isMined = true;
                         minesRemaining--;
                     }
@@ -40,10 +39,10 @@ export default class Grid {
             }
         }while (minesRemaining > 0);
         // set NNs
-        for (let i = 0; i < Grid.nRows; i++ ) {
-            for (let j = 0; j < Grid.nColumns; j++) {
+        for (let i = 0; i < Minesweeper.nRows; i++ ) {
+            for (let j = 0; j < Minesweeper.nColumns; j++) {
                 // get coords of current elem's clique and count how many have been mined.
-                const nnMines: number = Grid.getAdjacentCoords([i,j])
+                const nnMines: number = Minesweeper.getAdjacentCoords([i,j])
                     .map( (adjCellCoord) => {
                         const rowIndex = adjCellCoord[0];
                         const colIndex = adjCellCoord[1];
@@ -54,7 +53,7 @@ export default class Grid {
             }
         };
         // construct cells
-        Grid._Cells = gridConstructor.map( elem => {
+        Minesweeper.Cells = gridConstructor.map( elem => {
             return elem.map( inner => {
                 return new Cell(inner) })
             });
@@ -75,8 +74,8 @@ export default class Grid {
         const isBound = (pos: Coord): boolean => {
             return (
                 pos.every(p => p >= 0) &&
-                pos[0] <= Grid.rows() - 1 &&
-                pos[1] <= Grid.columns() - 1
+                pos[0] <= Minesweeper.nRows - 1 &&
+                pos[1] <= Minesweeper.nColumns - 1
             );
         };
         const nn: ReadonlyArray<any> = [
@@ -93,30 +92,14 @@ export default class Grid {
         return nn.filter(isBound);
     };
 
-    public static get Cells(){
-        return Grid._Cells;
-    };
-
     public static getCell(coordinate: Coord): Cell {
-        return  Grid._Cells[coordinate[0]][coordinate[1]];
+        return  Minesweeper.Cells[coordinate[0]][coordinate[1]];
     };
 
     public static uncoverRemainingMines(): Cell[] {
-        const mineCells: Cell[] = Grid._Cells.flat(1).filter( (cell) => cell.isMined);
+        const mineCells: Cell[] = Minesweeper.Cells.flat(1).filter( (cell) => cell.isMined);
         mineCells.map( (cell) => cell.uncover());
         return mineCells;
-    };
-
-    public static rows(): number {
-        return this.nRows;
-    };
-
-    public static columns(): number {
-        return this.nColumns;
-    };
-
-    public static get mines(): number {
-        return this.nMines;
     };
 
     // public static checkAndSetCondition() {

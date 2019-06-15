@@ -6,6 +6,7 @@ export default class CellObj extends GameObjects.Sprite {
     static ADJACENCY_COORDS: Coord[];
     cellData: Cell;
     isHover: boolean;
+    parentScene: Scene;
     constructor(scene: Scene, pos: {
         x: number;
         y: number;

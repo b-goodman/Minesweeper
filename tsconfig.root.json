@@ -1,9 +1,6 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "es6",
-        "outDir": "./lib",
-        "rootDir": "./src",
         "moduleResolution": "node",
         "sourceMap": true,
         "declaration": true,
@@ -26,7 +23,7 @@
         "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
         "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
 
-        "lib": ["es2017", "esnext", "dom", "es6"],
+        "lib": ["es2015", "es2017", "esnext", "dom", "es6"],
         "types": ["node"],
       //"typeRoots": ["node_modules/@types", "src/types"]
     },

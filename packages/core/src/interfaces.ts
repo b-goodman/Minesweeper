@@ -6,3 +6,9 @@ export interface CellConstructor {
     neighbouringMines: number,
 }
 
+export const enum CellEvents {
+    UNCOVERED = "uncovered",
+    FLAGGED = "flagged",
+    UNFLAGGED = "unflagged"
+};
+

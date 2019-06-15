@@ -1,8 +1,7 @@
-import { EmitterEvents, Textures} from './enums';
+import { EmitterEvents, Textures, GameEvents } from './enums';
 import { GameObjects, Input, Scene } from "phaser";
-import { Cell, Grid } from "@minesweeper/core/lib";
-import { Coord } from '@minesweeper/core/lib/interfaces';
 import { Assets } from './Assets';
+import { Coord, Cell } from "@minesweeper/core"
 
 
 const isArrayEqual = <T>( arr1:Array<T>, arr2:Array<T> ) => {
@@ -16,6 +15,7 @@ export default class CellObj extends GameObjects.Sprite {
     static  ADJACENCY_COORDS: Coord[] = [];
     cellData: Cell;
     isHover: boolean = false;
+    parentScene: Scene;
 
 
 
@@ -26,7 +26,9 @@ export default class CellObj extends GameObjects.Sprite {
         this.on( EmitterEvents.DOUBLE_CLICKED, this.doubleClickEventHandler);
         this.on( EmitterEvents.HOVER_IN, this.hoverInEventHandler);
         this.on( EmitterEvents.HOVER_OUT, this.hoverOutEventHandler);
-        this.cellData = data.cellObj
+        this.cellData = data.cellObj;
+        this. parentScene = scene;
+
     }
 
     refreshState ():void {
@@ -37,8 +39,7 @@ export default class CellObj extends GameObjects.Sprite {
         }else if ( !this.cellData.isCovered ) {
             if (this.cellData.isMined){
                 this.setTexture(Textures.MINED);
-                this.scene.events.emit(EmitterEvents.MINE_UNCOVERED);
-                Grid.uncoverRemainingMines();
+                this.scene.events.emit(GameEvents.MINE_REVEALED);
             } else {
                 this.setTexture( Assets.UncoveredTextures.get(this.cellData.adjacentMines) );
             }
@@ -55,6 +56,7 @@ export default class CellObj extends GameObjects.Sprite {
         switch (whichBtn) {
             case EmitterEvents.POINTER_LEFT:
                     this.cellData.uncover();
+                    this.scene.events.emit(GameEvents.CELL_UNCOVERED);
                 break;
             case EmitterEvents.POINTER_RIGHT:
                     this.cellData.toggleFlag();
@@ -62,7 +64,6 @@ export default class CellObj extends GameObjects.Sprite {
             default:
                 break;
         }
-        console.log(this.cellData)
     }
 
     doubleClickEventHandler ( _pointer:Input.Pointer, whichBtn: EmitterEvents.POINTER_RIGHT | EmitterEvents.POINTER_LEFT ):void {

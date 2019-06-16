@@ -1,12 +1,13 @@
 import { GameEvents, SoundKeys } from "../objects/enums";
 import { GameObjects,  Input, Scene } from "phaser";
 
-import {Minesweeper} from "@minesweeper/core"
+import {Grid} from "@minesweeper/core"
 
 import {  EmitterEvents, InputEventType } from "../objects/enums";
-import { InitParams } from "..";
+import { InitParams, SceneKeys } from "..";
 import { Assets } from "../objects/Assets";
 import CellObj from "../objects/CellObj";
+import Toolbar from "./Toolbar";
 
 
 
@@ -19,7 +20,7 @@ export default class GridScene extends Scene {
 
     constructor(){
         super({
-            key: "GridScene",
+            key: SceneKeys.GRID_SCENE,
         });
     }
 
@@ -28,8 +29,8 @@ export default class GridScene extends Scene {
      * @param params
      */
     init(params:InitParams): void {
-        new Minesweeper( params.rows );
-        this.mines = Minesweeper.nMines;
+        new Grid( params.rows );
+        this.mines = Grid.nMines;
         this.params = params;
     }
 
@@ -51,12 +52,14 @@ export default class GridScene extends Scene {
         this.data.set("timeElapsed", 0);
         this.data.set("isGameOver", false);
 
+        this.scene.add(SceneKeys.TOOLBAR, Toolbar, true);
+
         Assets.addSounds();
 
-        this.cellObjs = new Array(Minesweeper.nRows).fill(undefined).map( ( _elem, index_i) => {
-            return new Array(Minesweeper.nRows).fill(undefined).map( ( _elem, index_j ) => {
+        this.cellObjs = new Array(Grid.nRows).fill(undefined).map( ( _elem, index_i) => {
+            return new Array(Grid.nRows).fill(undefined).map( ( _elem, index_j ) => {
                 const p0 = {x: (index_j * this.params.cellWidth) + this.params.cellWidth/2  , y: (index_i * this.params.cellWidth) + this.params.cellWidth/2};
-                return this.add.existing( new CellObj(this, p0, {cellObj: Minesweeper.getCell([index_i,index_j]) }) ) as CellObj;
+                return this.add.existing( new CellObj(this, p0, {cellObj: Grid.getCell([index_i,index_j]) }) ) as CellObj;
             })
         }).flat();
 
@@ -74,7 +77,7 @@ export default class GridScene extends Scene {
 
         const handleGameOver = () => {
             console.log("game over");
-            Minesweeper.uncoverRemainingMines();
+            Grid.uncoverRemainingMines();
             this.cellObjs.forEach( obj => obj.disableInteractive() );
             this.data.values.isGameOver = true;
         };
@@ -100,21 +103,17 @@ export default class GridScene extends Scene {
 
         this.events.on( GameEvents.CELL_FLAGGED, () => {
             Assets.Sounds.get(SoundKeys.FLAGGED_2 ).play();
+            this.data.values.flagsRemaining -= 1;
         })
 
         this.events.on( GameEvents.CELL_UNFLAGGED, () => {
             Assets.Sounds.get(SoundKeys.UNFLAG_1).play();
+            this.data.values.flagsRemaining += 1;
         })
 
         this.events.on( GameEvents.CELL_UNCOVERED, () => {
             Assets.Sounds.get(SoundKeys.UNCOVERED_1).play();
         })
-
-        this.data.events.on("changekey-flagsRemaining", (_parent:this, _key:"flagsRemaining", value:number, prevValue:boolean) => {
-            console.log(`value:${prevValue} new value:${value}`);
-        })
-
-
 
     }
 

@@ -1,3 +1,0 @@
-
-const Grid = require( "../minesweeper");
-

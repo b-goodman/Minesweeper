@@ -1,5 +1,3 @@
-import { Cell } from './Cell';
-import { Minesweeper } from './Minesweeper';
-import { Coord, CellEvents } from "./interfaces"
+export {Grid} from "./Grid"
+export {Cell, Coord, CellConstructor, CellEvents} from "./Cell"
 
-export { Cell, Minesweeper, Coord, CellEvents }

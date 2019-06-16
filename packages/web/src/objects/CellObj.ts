@@ -1,7 +1,7 @@
 import { EmitterEvents, Textures, GameEvents } from './enums';
 import { GameObjects, Input, Scene } from "phaser";
 import { Assets } from './Assets';
-import { Coord, Cell } from "@minesweeper/core"
+import { Coord, Cell, CellEvents } from '@minesweeper/core';
 
 
 const isArrayEqual = <T>( arr1:Array<T>, arr2:Array<T> ) => {
@@ -15,7 +15,7 @@ export default class CellObj extends GameObjects.Sprite {
     static  ADJACENCY_COORDS: Coord[] = [];
     cellData: Cell;
     isHover: boolean = false;
-    parentScene: Scene;
+    // parentScene: Scene;
 
 
 
@@ -27,23 +27,33 @@ export default class CellObj extends GameObjects.Sprite {
         this.on( EmitterEvents.HOVER_IN, this.hoverInEventHandler);
         this.on( EmitterEvents.HOVER_OUT, this.hoverOutEventHandler);
         this.cellData = data.cellObj;
-        this. parentScene = scene;
-
+        this.cellData.addEventListner( CellEvents.FLAGGED, () => {
+            scene.events.emit( GameEvents.CELL_FLAGGED)
+        });
+        this.cellData.addEventListner( CellEvents.UNCOVERED, () => {
+            scene.events.emit( GameEvents.CELL_UNCOVERED)
+        });
+        this.cellData.addEventListner( CellEvents.UNFLAGGED, () => {
+            scene.events.emit( GameEvents.CELL_UNFLAGGED)
+        });
+        this.cellData.addEventListner( CellEvents.MINE_UNCOVERED, () => {
+            scene.events.emit( GameEvents.MINE_REVEALED)
+        })
+        // this.parentScene = scene;
     }
 
     refreshState ():void {
         if ( this.isAdajcentToHovered() ){
             this.setTexture(Textures.ADJACENT);
-        } else if ( this.isHover && !this.cellData.isFlagged ){
+        } else if ( this.isHover && !this.cellData.flagged ){
             this.setTexture(Textures.HOVER);
-        }else if ( !this.cellData.isCovered ) {
-            if (this.cellData.isMined){
+        }else if ( !this.cellData.covered ) {
+            if (this.cellData.mined){
                 this.setTexture(Textures.MINED);
-                this.scene.events.emit(GameEvents.MINE_REVEALED);
             } else {
                 this.setTexture( Assets.UncoveredTextures.get(this.cellData.adjacentMines) );
             }
-        } else if ( this.cellData.isFlagged ) {
+        } else if ( this.cellData.flagged ) {
             this.setTexture(Textures.FLAGGED);
         } else {
             this.setTexture(Textures.COVERED);
@@ -56,7 +66,6 @@ export default class CellObj extends GameObjects.Sprite {
         switch (whichBtn) {
             case EmitterEvents.POINTER_LEFT:
                     this.cellData.uncover();
-                    this.scene.events.emit(GameEvents.CELL_UNCOVERED);
                 break;
             case EmitterEvents.POINTER_RIGHT:
                     this.cellData.toggleFlag();
@@ -80,7 +89,7 @@ export default class CellObj extends GameObjects.Sprite {
 
 
     hoverInEventHandler ():void {
-        if ( !this.cellData.isCovered ){
+        if ( !this.cellData.covered ){
             const highlightAdjCells = this.cellData.getAdjacentCoveredCells().map( cell => cell.coordinate );
             CellObj.ADJACENCY_COORDS = highlightAdjCells;
         } else {
@@ -91,7 +100,7 @@ export default class CellObj extends GameObjects.Sprite {
 
 
     hoverOutEventHandler ():void {
-        if ( this.cellData.isCovered ){
+        if ( this.cellData.covered ){
             this.isHover = false;
         }
     }

@@ -63,8 +63,6 @@ export class Assets {
         Assets.Sounds.set( SoundKeys.UNFLAG_1, this._scene.sound.add(SoundKeys.UNFLAG_1)  );
         Assets.Sounds.set( SoundKeys.UNFLAG_2, this._scene.sound.add(SoundKeys.UNFLAG_2)  );
 
-        console.log(Assets.Sounds);
-
     }
 
 

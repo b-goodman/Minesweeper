@@ -23,7 +23,6 @@ export enum GameEvents {
     CELL_UNCOVERED = "cell_uncovered",
     CELL_FLAGGED = "cell_flagged",
     CELL_UNFLAGGED = "cell_unflagged",
-    
 }
 
 export enum Textures {

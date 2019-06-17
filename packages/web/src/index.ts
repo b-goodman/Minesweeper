@@ -9,7 +9,7 @@ export const enum SceneKeys {
 const gameConfig = {
     type: Phaser.AUTO,
     width: 600,
-    height: 600,
+    height: 660,
     parent: "main",
     scene: [GridScene],
     scale:{
@@ -19,6 +19,7 @@ const gameConfig = {
     audio: {
         disableWebAudio: true
     },
+    backgroundColor: "#FFFFFF",
 };
 
 class MinesweeperGame extends Game {

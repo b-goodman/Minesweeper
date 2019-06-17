@@ -38,9 +38,7 @@ export default class GridScene extends Scene {
      * Called before the scene objects are created, and it contains loading assets; these assets are cached, so when the scene is restarted, they are not reloaded.
      */
     preload(): void {
-
         new Assets(this);
-
     }
 
     /**
@@ -58,7 +56,7 @@ export default class GridScene extends Scene {
 
         this.cellObjs = new Array(Grid.nRows).fill(undefined).map( ( _elem, index_i) => {
             return new Array(Grid.nRows).fill(undefined).map( ( _elem, index_j ) => {
-                const p0 = {x: (index_j * this.params.cellWidth) + this.params.cellWidth/2  , y: (index_i * this.params.cellWidth) + this.params.cellWidth/2};
+                const p0 = {x: (index_j * this.params.cellWidth) + this.params.cellWidth/2  , y: ((index_i * this.params.cellWidth) + this.params.cellWidth/2) + 60};
                 return this.add.existing( new CellObj(this, p0, {cellObj: Grid.getCell([index_i,index_j]) }) ) as CellObj;
             })
         }).flat();

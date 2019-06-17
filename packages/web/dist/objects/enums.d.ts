@@ -22,22 +22,11 @@ export declare enum GameEvents {
     CELL_UNFLAGGED = "cell_unflagged"
 }
 export declare enum Textures {
-    COVERED = "cover",
+    COVERED = "covered",
     FLAGGED = "flagged",
     HOVER = "hover",
     ADJACENT = "adjacent",
-    MINED = "mined"
-}
-export declare enum UncoveredTextures {
-    EMPTY = "n00",
-    N01 = "n01",
-    N02 = "n02",
-    N03 = "n03",
-    N04 = "n04",
-    N05 = "n05",
-    N06 = "n06",
-    N07 = "n07",
-    N08 = "n08"
+    MINED = "mine"
 }
 export declare enum SoundKeys {
     UNCOVERED_1 = "UNCOVERED_1",

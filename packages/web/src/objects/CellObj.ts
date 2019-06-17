@@ -1,6 +1,6 @@
 import { EmitterEvents, Textures, GameEvents } from './enums';
 import { GameObjects, Input, Scene } from "phaser";
-import { Assets } from './Assets';
+// import { Assets } from './Assets';
 import { Coord, Cell, CellEvents } from '@minesweeper/core';
 
 
@@ -20,7 +20,7 @@ export default class CellObj extends GameObjects.Sprite {
 
 
     constructor(scene: Scene, pos:{x:number,y:number}, data:{cellObj:Cell}){
-        super(scene, pos.x, pos.y, Textures.COVERED);
+        super(scene, pos.x, pos.y, "Tiles", Textures.COVERED);
         this.setInteractive();
         this.on( EmitterEvents.CLICKED, this.clickEventHandler);
         this.on( EmitterEvents.DOUBLE_CLICKED, this.doubleClickEventHandler);
@@ -44,19 +44,19 @@ export default class CellObj extends GameObjects.Sprite {
 
     refreshState ():void {
         if ( this.isAdajcentToHovered() ){
-            this.setTexture(Textures.ADJACENT);
+            this.setTexture("Tiles", Textures.ADJACENT);
         } else if ( this.isHover && !this.cellData.flagged ){
-            this.setTexture(Textures.HOVER);
+            this.setTexture("Tiles", Textures.HOVER);
         }else if ( !this.cellData.covered ) {
             if (this.cellData.mined){
-                this.setTexture(Textures.MINED);
+                this.setTexture("Tiles", Textures.MINED);
             } else {
-                this.setTexture( Assets.UncoveredTextures.get(this.cellData.adjacentMines) );
+                this.setTexture("Tiles", this.cellData.adjacentMines.toString() );
             }
         } else if ( this.cellData.flagged ) {
-            this.setTexture(Textures.FLAGGED);
+            this.setTexture("Tiles", Textures.FLAGGED);
         } else {
-            this.setTexture(Textures.COVERED);
+            this.setTexture("Tiles", Textures.COVERED);
         }
     }
 

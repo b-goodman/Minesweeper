@@ -1,6 +1,17 @@
 {
+  "npmClient": "yarn",
   "packages": [
     "packages/*"
   ],
-  "version": "independent"
+  "version": "independent",
+  "command": {
+    "publish": {
+      "ignoreChanges": ["ignored-file", "*.md"],
+      "message": "chore(release): publish"
+    },
+    "bootstrap": {
+      "ignore": "",
+      "npmClientArgs": ["--no-lockfile"]
+    }
+  }
 }

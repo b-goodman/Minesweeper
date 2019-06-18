@@ -7,9 +7,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "tsc": "tsc && yarn build:docs && ./node_modules/.bin/webpack ",
-    "build:docs": "npx typedoc ./src",
-    "build:lib": "tsc && ./node_modules/.bin/webpack",
+    "build": "webpack",
     "start": "./node_modules/.bin/webpack-dev-server "
   },
   "files": [
@@ -32,7 +30,12 @@
     "@types/node": "^12.0.8",
     "babel-loader": "^8.0.6",
     "babel-minify-webpack-plugin": "^0.3.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.3",
+    "html-webpack-plugin": "^3.2.0",
     "jest": "^24.8.0",
+    "raw-loader": "^3.0.0",
+    "terser-webpack-plugin": "^1.3.0",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.2",
     "tslint": "^5.17.0",

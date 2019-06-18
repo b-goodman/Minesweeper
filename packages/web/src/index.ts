@@ -28,13 +28,16 @@ class MinesweeperGame extends Game {
     }
 }
 
-export interface InitParams { rows?: number, cellWidth?: number,};
+export interface GridInitParams {
+    rows?: number,
+    cellWidth?: number,
+    mines?: number,
+};
 
-const gridSceneParams: InitParams = {
+const gridSceneParams: GridInitParams = {
     rows:10,
     cellWidth: 60,
 }
-
 
 window.onload = () => {
     const msGame = new MinesweeperGame(gameConfig);

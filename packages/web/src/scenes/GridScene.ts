@@ -4,16 +4,15 @@ import { GameObjects,  Input, Scene } from "phaser";
 import {Grid} from "@minesweeper/core"
 
 import {  EmitterEvents, InputEventType } from "../objects/enums";
-import { InitParams, SceneKeys } from "..";
+import { GridInitParams, SceneKeys } from "..";
 import { Assets } from "../objects/Assets";
 import CellObj from "../objects/CellObj";
 import Toolbar from "./Toolbar";
 
 
-
 export default class GridScene extends Scene {
     mines: number;
-    params: InitParams;
+    params: GridInitParams;
     cellObjs: CellObj[] = [];
     lClicks: number = 0;
     doubleClickDelay: number = 170;
@@ -28,7 +27,7 @@ export default class GridScene extends Scene {
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
      * @param params
      */
-    init(params:InitParams): void {
+    init(params:GridInitParams): void {
         new Grid( params.rows );
         this.mines = Grid.nMines;
         this.params = params;

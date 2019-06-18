@@ -4,7 +4,7 @@ var Grid = /** @class */ (function () {
         if (options === void 0) { options = {}; }
         Grid.nRows = nRows;
         Grid.nColumns = nRows;
-        Grid.nMines = options.mines || Math.floor(nRows + Math.pow(nRows, 1.3)) - 3;
+        Grid.nMines = options.mines || Math.floor(nRows / 2 + Math.pow(nRows, 1.2));
         /**
          * gridConstructor will hold the constructor arguments for the Cell which shall take it's place in the array's elements
          */

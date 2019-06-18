@@ -32,5 +32,8 @@
     "tslint-config-prettier": "^1.18.0",
     "typedoc": "^0.14.2",
     "typescript": "^3.5.2"
+  },
+  "dependencies": {
+    "undefined": "/Users/bgoodman/git/minesweeper/packages/core"
   }
 }

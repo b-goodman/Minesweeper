@@ -1,9 +1,9 @@
 import { Scene } from "phaser";
-import { InitParams } from "..";
+import { GridInitParams } from "..";
 import CellObj from "../objects/CellObj";
 export default class GridScene extends Scene {
     mines: number;
-    params: InitParams;
+    params: GridInitParams;
     cellObjs: CellObj[];
     lClicks: number;
     doubleClickDelay: number;
@@ -12,7 +12,7 @@ export default class GridScene extends Scene {
      * Called when the scene starts; this function may accept parameters, which are passed from other scenes or game by calling scene.start(key, [params]).
      * @param params
      */
-    init(params: InitParams): void;
+    init(params: GridInitParams): void;
     /**
      * Called before the scene objects are created, and it contains loading assets; these assets are cached, so when the scene is restarted, they are not reloaded.
      */

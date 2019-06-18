@@ -1,0 +1,16 @@
+<TextureAtlas imagePath="tiles.png">
+	<SubTexture name="1" x="62" y="124" width="60" height="60"/>
+	<SubTexture name="2" x="186" y="0" width="60" height="60"/>
+	<SubTexture name="3" x="124" y="186" width="60" height="60"/>
+	<SubTexture name="4" x="124" y="124" width="60" height="60"/>
+	<SubTexture name="5" x="124" y="62" width="60" height="60"/>
+	<SubTexture name="6" x="124" y="0" width="60" height="60"/>
+	<SubTexture name="7" x="62" y="186" width="60" height="60"/>
+	<SubTexture name="8" x="186" y="62" width="60" height="60"/>
+	<SubTexture name="adjacent" x="0" y="62" width="60" height="60"/>
+	<SubTexture name="covered" x="62" y="62" width="60" height="60"/>
+	<SubTexture name="0" x="62" y="0" width="60" height="60"/>
+	<SubTexture name="flagged" x="0" y="186" width="60" height="60"/>
+	<SubTexture name="hover" x="0" y="124" width="60" height="60"/>
+	<SubTexture name="mine" x="0" y="0" width="60" height="60"/>
+</TextureAtlas>

@@ -8,10 +8,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
     mode: "production",
-    // entry: {
-    //     filename: "./src/index.ts",
-    //     vendor: ["phaser"],
-    // },
     entry:{
         vendor: ["phaser"],
         app:[
@@ -28,7 +24,7 @@ module.exports = {
         rules: [
             // {
             //     test: /\.js$/,
-            //     type: "javascript/auto",
+            //     type: "javascript/esm",
             //     exclude: /node_modules/
             // },
             {

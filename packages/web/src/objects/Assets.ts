@@ -11,19 +11,16 @@ export class Assets {
 
     private static _scene: Scene;
 
-    // private static _sound_data = new Map<SoundKeys, Object>([ [SoundKeys.FLAGGED_1, {path:"", key:""}], ])
-
     static Sounds: Map<SoundKeys, Sound.BaseSound > = new Map([]);
-
-    // static UncoveredTextures: Map<number, string> = new Map(new Array(8+1).fill(undefined).map( (_e, i) => {
-    //     return `n${i.toString(10).padStart(2,"0")}`}).entries()
-    // )
 
     constructor(scene: Scene){
         Assets._scene = scene;
 
         scene.load.path = "/assets/images/"
         scene.load.atlasXML("Tiles", "tiles.png", "tiles.xml" )
+
+        // scene.load.path = "/assets/fonts/"
+        // scene.load.bitmapFont("DigitsOnly", "numbers.png", "numbers.fnt")
 
         scene.load.path = "/assets/audio/"
         scene.load.audio(SoundKeys.UNCOVERED_1, "uncover_1.mp3");

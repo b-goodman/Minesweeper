@@ -7,11 +7,11 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "build": "webpack",
-    "start": "./node_modules/.bin/webpack-dev-server "
+    "build": "webpack && echo \"Toal distribution size: $(du -hs dist | awk '{print $1}')\"",
+    "start": "./node_modules/.bin/webpack-dev-server"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "jest": {
     "moduleFileExtensions": [
